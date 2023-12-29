@@ -1,0 +1,29 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:DedicatedServerTool.Avalonia.ViewModels"
+             x:DataType="vm:AppViewModel"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="DedicatedServerTool.Avalonia.Views.ServerProfileDetails">
+    <StackPanel>
+        <TextBlock FontSize="24" Text="{Binding SelectedServerProfile.ServerName}" Margin="0,0,0,25" />
+
+        <StackPanel Classes="form-group">
+            <TextBlock Text="Install Directory" />
+            <TextBlock Classes="info" Text="The location of the server files." />
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBox Text="{Binding SelectedServerProfile.InstallDirectory}" IsReadOnly="True" Grid.Column="0" />
+                <Button Content="View" Command="{Binding OpenInstallDirectoryCommand}" Margin="10,0,0,0" Grid.Column="1" />
+            </Grid>
+        </StackPanel>
+
+        <Grid>
+            <Button Content="Delete Profile" ToolTip.Tip="This will delete the profile from the launcher. The server files will remain on your system." Command="{Binding DiscardServerProfileSetupCommand}" HorizontalAlignment="Right" />
+        </Grid>
+    </StackPanel>
+</UserControl>

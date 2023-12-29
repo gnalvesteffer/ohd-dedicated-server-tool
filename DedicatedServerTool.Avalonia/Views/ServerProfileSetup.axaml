@@ -1,0 +1,45 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:DedicatedServerTool.Avalonia.ViewModels"
+             x:DataType="vm:ServerProfileSetupViewModel"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="DedicatedServerTool.Avalonia.Views.ServerProfileSetup">
+    <StackPanel>
+        <TabControl>
+            <TabItem Header="Installation">
+                <StackPanel>
+                    <StackPanel Classes="form-group">
+                        <TextBlock Text="Install Directory" />
+                        <TextBlock Classes="info" Text="Select the location to install the server files. You may also select an existing installation to add it to the launcher." />
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBox Text="{Binding ServerProfile.InstallDirectory}" Grid.Column="0" />
+                            <Button Content="Browse..." Command="{Binding SelectInstallDirectoryCommand}" Margin="10,0,0,0" Grid.Column="1" />
+                        </Grid>
+                    </StackPanel>
+                    <StackPanel Classes="form-group">
+                        <Button Classes="accent" Content="Download Server Files" Command="{Binding DownloadServerFilesCommand}" IsVisible="{Binding !IsDownloadingServerFiles}" IsEnabled="{Binding CanDownloadServerFiles}" />
+                        <Button Classes="accent" Content="Downloading... this may take a while..." IsVisible="{Binding IsDownloadingServerFiles}" IsEnabled="false" />
+                    </StackPanel>
+                </StackPanel>
+            </TabItem>
+            <TabItem Header="Configuration">
+                <StackPanel>
+                    <StackPanel Classes="form-group">
+                        <TextBlock Text="Server Name" />
+                        <TextBox Text="{Binding ServerProfile.ServerName}" />
+                    </StackPanel>
+                    <Grid>
+                        <Button Classes="accent" Content="Save" Command="{Binding SubmitServerProfileSetupCommand}" HorizontalAlignment="Left" />
+                        <Button Content="Discard" Command="{Binding DiscardServerProfileSetupCommand}" HorizontalAlignment="Right" />
+                    </Grid>
+                </StackPanel>
+            </TabItem>
+        </TabControl>
+    </StackPanel>
+</UserControl>

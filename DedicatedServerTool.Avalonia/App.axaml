@@ -1,0 +1,38 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="DedicatedServerTool.Avalonia.App"
+             xmlns:local="using:DedicatedServerTool.Avalonia"
+             RequestedThemeVariant="Dark">
+             <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
+
+    <Application.DataTemplates>
+        <local:ViewLocator/>
+    </Application.DataTemplates>
+  
+    <Application.Styles>
+        <FluentTheme>
+            <FluentTheme.Palettes>
+                <ColorPaletteResources x:Key="Light" Accent="#ffcc4d11" AltHigh="White" AltLow="White" AltMedium="White" AltMediumHigh="White" AltMediumLow="White" BaseHigh="Black" BaseLow="#ff7cbee0" BaseMedium="#ff3282a8" BaseMediumHigh="#ff005a83" BaseMediumLow="#ff196e96" ChromeAltLow="#ff005a83" ChromeBlackHigh="Black" ChromeBlackLow="#ff7cbee0" ChromeBlackMedium="#ff005a83" ChromeBlackMediumLow="#ff3282a8" ChromeDisabledHigh="#ff7cbee0" ChromeDisabledLow="#ff3282a8" ChromeGray="#ff196e96" ChromeHigh="#ff7cbee0" ChromeLow="#ffc1e9fe" ChromeMedium="#ffb3e0f8" ChromeMediumLow="#ffc1e9fe" ChromeWhite="White" ListLow="#ffb3e0f8" ListMedium="#ff7cbee0" RegionColor="#ffcfeaff" />
+                <ColorPaletteResources x:Key="Dark" Accent="#fff15c25" AltHigh="Black" AltLow="Black" AltMedium="Black" AltMediumHigh="Black" AltMediumLow="Black" BaseHigh="White" BaseLow="#ff313e4c" BaseMedium="#ff92a0af" BaseMediumHigh="#ffaab9c8" BaseMediumLow="#ff616f7e" ChromeAltLow="#ffaab9c8" ChromeBlackHigh="Black" ChromeBlackLow="#ffaab9c8" ChromeBlackMedium="Black" ChromeBlackMediumLow="Black" ChromeDisabledHigh="#ff313e4c" ChromeDisabledLow="#ff92a0af" ChromeGray="#ff7a8896" ChromeHigh="#ff7a8896" ChromeLow="#ff0a1d36" ChromeMedium="#ff14253b" ChromeMediumLow="#ff273646" ChromeWhite="White" ListLow="#ff14253b" ListMedium="#ff313e4c" RegionColor="#ff0a0b0d" />
+            </FluentTheme.Palettes>
+        </FluentTheme>
+        <Style Selector="TextBlock.info">
+            <Setter Property="FontSize" Value="10" />
+        </Style>
+        <Style Selector="TextBlock.attention">
+            <Setter Property="Foreground" Value="#fff15c25" />
+        </Style>
+        <Style Selector="Border.form-group">
+            <Setter Property="Margin" Value="0,0,0,15" />
+            <Setter Property="Padding" Value="15" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderBrush" Value="#ff7a8896" />
+        </Style>
+        <Style Selector="StackPanel.form-group">
+            <Setter Property="Margin" Value="0,0,0,15" />
+        </Style>
+        <Style Selector="Button.accent">
+            <Setter Property="Background" Value="#fff15c25" />
+        </Style>
+    </Application.Styles>
+</Application>
