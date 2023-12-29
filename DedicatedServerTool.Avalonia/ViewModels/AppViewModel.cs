@@ -75,7 +75,6 @@ public partial class AppViewModel : ViewModelBase
     public ICommand OpenInstallDirectoryCommand { get; }
     public ICommand CreateServerProfileCommand { get; }
     public ICommand EditServerProfileCommand { get; }
-    public ICommand SubmitServerProfileSetupCommand { get; }
     public ICommand DeleteServerProfileSetupCommand { get; }
     public ICommand StartServerCommand { get; }
     public ICommand SaveAppStateCommand { get; }
@@ -111,7 +110,11 @@ public partial class AppViewModel : ViewModelBase
             Port = 7777,
             RconPort = 7779,
             QueryPort = 27005,
+            MaxPlayers = 16,
+            BluforBotCount = 0,
+            OpforBotCount = 0,
         };
+
         ServerProfiles.Add(serverProfile);
         SelectedServerProfile = serverProfile;
     }
@@ -138,6 +141,11 @@ public partial class AppViewModel : ViewModelBase
 
     private void StartServer()
     {
+        if (SelectedServerProfile == null)
+        {
+            return;
+        }
+
         ServerUtility.StartServer(SelectedServerProfile);
     }
 

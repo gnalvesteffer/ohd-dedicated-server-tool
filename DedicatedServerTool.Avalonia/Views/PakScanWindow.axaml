@@ -1,0 +1,43 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="using:DedicatedServerTool.Avalonia.ViewModels"
+        x:DataType="vm:PakScanViewModel"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="DedicatedServerTool.Avalonia.Views.PakScanWindow"
+        Width="640"
+        Height="480"
+        Icon="/Assets/ohd.ico"
+        Title="Scan Results">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Classes="info" Text="Results may not be accurate." Grid.Row="0" />
+
+        <ScrollViewer Grid.Row="1">
+            <StackPanel>
+                <WrapPanel>
+                    <Button Content="Scan Vanilla Maps" Command="{Binding FindVanillaMapsCommand}" />
+                    <Button Content="Scan Mod Maps" Command="{Binding FindModMapsCommand}" />
+                </WrapPanel>
+                <ListBox ItemsSource="{Binding Results}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel>
+                                <TextBlock Text="{Binding PakFilePath}" />
+                                <TextBox Text="{Binding Result}" IsReadOnly="True" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </StackPanel>
+        </ScrollViewer>
+
+        <ProgressBar Height="25" Minimum="0" Maximum="{Binding TotalPakFiles}" Value="{Binding TotalProcessedPakFiles}" ShowProgressText="True" IsVisible="{Binding IsLoading}" Grid.Row="2"/>
+    </Grid>
+</Window>

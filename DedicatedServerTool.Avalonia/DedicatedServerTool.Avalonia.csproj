@@ -31,6 +31,9 @@
 
 
   <ItemGroup>
+    <Compile Update="Views\PakScanWindow.axaml.cs">
+      <DependentUpon>PakScanWindow.axaml</DependentUpon>
+    </Compile>
     <Compile Update="Views\ServerProfileSetup.axaml.cs">
       <DependentUpon>ServerProfileSetup.axaml</DependentUpon>
     </Compile>

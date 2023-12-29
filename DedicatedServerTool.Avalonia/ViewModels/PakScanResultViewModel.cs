@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace DedicatedServerTool.Avalonia.ViewModels;
-public class MapViewModel : ObservableObject
+public class PakScanResultViewModel : ObservableObject
 {
     private string _pakFilePath = string.Empty;
     public string PakFilePath
@@ -10,16 +10,16 @@ public class MapViewModel : ObservableObject
         set => SetProperty(ref _pakFilePath, value);
     }
 
-    private string _mapName = string.Empty;
-    public string MapName
+    private string _result = string.Empty;
+    public string Result
     {
-        get => _mapName;
-        set => SetProperty(ref _mapName, value);
+        get => _result;
+        set => SetProperty(ref _result, value);
     }
 
-    public MapViewModel(string pakFilePath, string mapName)
+    public PakScanResultViewModel(string pakFilePath, string result)
     {
         PakFilePath = pakFilePath;
-        MapName = mapName;
+        Result = result;
     }
 }

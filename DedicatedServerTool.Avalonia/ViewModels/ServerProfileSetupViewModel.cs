@@ -129,7 +129,7 @@ public class ServerProfileSetupViewModel : ObservableObject
 
     private void BrowseMaps()
     {
-        var mapBrowserWindow = new MapBrowserWindow(ServerProfile);
-        mapBrowserWindow.Show();
+        var scanWindow = new PakScanWindow(ServerProfile);
+        scanWindow.Show();
     }
 }
