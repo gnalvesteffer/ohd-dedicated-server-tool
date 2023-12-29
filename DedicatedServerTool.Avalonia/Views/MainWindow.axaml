@@ -20,10 +20,10 @@
 
         <Image Source="/Assets/background.png" Stretch="UniformToFill" Grid.ColumnSpan="2" Opacity="0.05" />
         <local:ServerProfileList Grid.Column="0" />
-        <Border BoxShadow="0 0 5 0 Black" Grid.Column="1">
+        <Border BoxShadow="0 0 15 0 #5000" Grid.Column="1">
             <Panel IsVisible="{Binding IsServerProfileSelected}">
-                <local:ServerProfileDetails DataContext="{Binding}" IsVisible="{Binding SelectedServerProfile.IsSetUp}" Margin="50,25" />
-                <local:ServerProfileSetup DataContext="{Binding ServerProfileSetupViewModel}" IsVisible="{Binding !ServerProfile.IsSetUp}" Margin="50,25" />
+                <local:ServerProfileDetails DataContext="{Binding}" IsVisible="{Binding SelectedServerProfile.IsSetUp}" Margin="10" />
+                <local:ServerProfileSetup DataContext="{Binding ServerProfileSetupViewModel}" IsVisible="{Binding !ServerProfile.IsSetUp}" Margin="10" />
             </Panel>
         </Border>
     </Grid>

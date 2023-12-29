@@ -13,7 +13,9 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <TextBlock Text="Profiles" Padding="10,25" FontSize="24" Grid.Row="0" />
+        <Border Classes="accented-border">
+            <TextBlock Text="Profiles" Padding="10,25" FontSize="24" Grid.Row="0" />
+        </Border>
 
         <ListBox ItemsSource="{Binding ServerProfiles}" SelectedItem="{Binding SelectedServerProfile}" Background="#3000" Grid.Row="1">
             <ListBox.ItemTemplate>

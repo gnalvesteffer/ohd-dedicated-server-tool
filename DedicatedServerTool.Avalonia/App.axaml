@@ -28,6 +28,10 @@
         <Style Selector="TextBlock.success">
             <Setter Property="Foreground" Value="#ff90ff32" />
         </Style>
+        <Style Selector="Border.accented-border">
+            <Setter Property="BorderThickness" Value="10,0,0,0" />
+            <Setter Property="BorderBrush" Value="#fff15c25" />
+        </Style>
         <Style Selector="Border.form-group">
             <Setter Property="Margin" Value="0,0,0,15" />
             <Setter Property="Padding" Value="15" />
