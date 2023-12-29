@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DedicatedServerTool.Avalonia.Core;
 using DedicatedServerTool.Avalonia.Models;
+using DedicatedServerTool.Avalonia.Views;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -52,6 +53,7 @@ public class ServerProfileSetupViewModel : ObservableObject
     public ICommand SubmitServerProfileSetupCommand { get; }
     public ICommand DiscardServerProfileSetupCommand { get; }
     public ICommand DownloadServerFilesCommand { get; }
+    public ICommand BrowseMapsCommand { get; }
 
     public ServerProfileSetupViewModel(ServerProfile serverProfile, ICommand onDiscardServerProfile)
     {
@@ -61,6 +63,7 @@ public class ServerProfileSetupViewModel : ObservableObject
         SubmitServerProfileSetupCommand = new RelayCommand(SubmitServerProfileSetup);
         DiscardServerProfileSetupCommand = onDiscardServerProfile;
         DownloadServerFilesCommand = new AsyncRelayCommand(DownloadOrUpdateServerFilesAsync);
+        BrowseMapsCommand = new RelayCommand(BrowseMaps);
         UpdateServerFileProperties();
     }
 
@@ -122,5 +125,11 @@ public class ServerProfileSetupViewModel : ObservableObject
         var result = await SteamCmdUtility.DownloadOrUpdateDedicatedServerAsync(ServerProfile.InstallDirectory);
         IsDownloadingServerFiles = false;
         UpdateServerFileProperties();
+    }
+
+    private void BrowseMaps()
+    {
+        var mapBrowserWindow = new MapBrowserWindow(ServerProfile);
+        mapBrowserWindow.Show();
     }
 }

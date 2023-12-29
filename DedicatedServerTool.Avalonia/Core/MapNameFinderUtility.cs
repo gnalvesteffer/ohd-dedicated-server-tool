@@ -8,12 +8,21 @@ using System.Threading.Tasks;
 namespace DedicatedServerTool.Avalonia.Core;
 internal static class MapNameFinderUtility
 {
-    public static async Task<IEnumerable<string>> FindMapNamesInPaksAsync(params string[] pakFilePaths)
+    public delegate void OnPakFileProcessed(string pakFilePath, IEnumerable<string> mapNames);
+
+    public static async Task<IEnumerable<string>> FindMapNamesInPaksAsync(IEnumerable<string> pakFilePaths, OnPakFileProcessed? pakFileProcessedHandler = null)
     {
-        var tasks = pakFilePaths.Select(FindMapNamesInPakAsync);
+        var tasks = pakFilePaths.Select(async pakFilePath =>
+        {
+            var mapNames = await FindMapNamesInPakAsync(pakFilePath);
+            pakFileProcessedHandler?.Invoke(pakFilePath, mapNames);
+            return mapNames;
+        });
+
         var results = await Task.WhenAll(tasks);
         return results.SelectMany(x => x);
     }
+
 
     private static async Task<IEnumerable<string>> FindMapNamesInPakAsync(string pakFilePath)
     {

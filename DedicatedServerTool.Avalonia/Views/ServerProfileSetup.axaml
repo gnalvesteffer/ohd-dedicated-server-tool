@@ -13,29 +13,31 @@
         </Grid.RowDefinitions>
         <TabControl Grid.Row="0" >
             <TabItem Header="Installation">
-                <StackPanel>
-                    <StackPanel Classes="form-group">
-                        <TextBlock Text="Install Directory" />
-                        <TextBlock Classes="info" Text="Select the location to install the server files. You may also select an existing installation to add it to the launcher." />
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <TextBox Text="{Binding ServerProfile.InstallDirectory}" Grid.Column="0" />
-                            <Button Content="Browse..." Command="{Binding SelectInstallDirectoryCommand}" Margin="10,0,0,0" Grid.Column="1" />
-                        </Grid>
+                <ScrollViewer>
+                    <StackPanel>
+                        <StackPanel Classes="form-group">
+                            <TextBlock Text="Install Directory" />
+                            <TextBlock Classes="info" Text="Select the location to install the server files. You may also select an existing installation to add it to the launcher." />
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBox Text="{Binding ServerProfile.InstallDirectory}" Grid.Column="0" />
+                                <Button Content="Browse..." Command="{Binding SelectInstallDirectoryCommand}" Margin="10,0,0,0" Grid.Column="1" />
+                            </Grid>
+                        </StackPanel>
+                        <StackPanel Classes="form-group">
+                            <Panel IsVisible="{Binding !AreServerFilesInstalled}">
+                                <Button Classes="accent" Content="Download Server Files" Command="{Binding DownloadServerFilesCommand}" IsVisible="{Binding !IsDownloadingServerFiles}" IsEnabled="{Binding CanDownloadServerFiles}" />
+                                <Button Classes="accent" Content="Downloading... this may take a while..." IsVisible="{Binding IsDownloadingServerFiles}" IsEnabled="false" />
+                            </Panel>
+                            <TextBlock Classes="success" Text="Server files are installed!" IsVisible="{Binding AreServerFilesInstalled}" />
+                        </StackPanel>
                     </StackPanel>
-                    <StackPanel Classes="form-group">
-                        <Panel IsVisible="{Binding !AreServerFilesInstalled}">
-                            <Button Classes="accent" Content="Download Server Files" Command="{Binding DownloadServerFilesCommand}" IsVisible="{Binding !IsDownloadingServerFiles}" IsEnabled="{Binding CanDownloadServerFiles}" />
-                            <Button Classes="accent" Content="Downloading... this may take a while..." IsVisible="{Binding IsDownloadingServerFiles}" IsEnabled="false" />
-                        </Panel>
-                        <TextBlock Classes="success" Text="Server files are installed!" IsVisible="{Binding AreServerFilesInstalled}" />
-                    </StackPanel>
-                </StackPanel>
+                </ScrollViewer>
             </TabItem>
-            <TabItem Header="Configuration">
+            <TabItem Header="Hosting">
                 <ScrollViewer>
                     <StackPanel>
                         <StackPanel Classes="form-group">
@@ -64,6 +66,30 @@
                                 </StackPanel>
                             </WrapPanel>
                         </StackPanel>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem Header="Configuration">
+                <ScrollViewer>
+                    <StackPanel>
+                        <StackPanel Classes="form-group">
+                            <TextBlock Text="Initial Map" />
+                            <TextBlock Classes="info" TextWrapping="Wrap" Text="This will be the map that gets loaded when the server starts. Use the Scan button to launch the Map Scanner window, and copy the desired map name into the textbox." />
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBox Text="{Binding ServerProfile.InitialMapName}" Grid.Column="0" />
+                                <Button Content="Scan" ToolTip.Tip="Scans installed mods for map names." Command="{Binding BrowseMapsCommand}" Margin="10,0,0,0" Grid.Column="1" />
+                            </Grid>
+                        </StackPanel>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem Header="Mods">
+                <ScrollViewer>
+                    <StackPanel>
                     </StackPanel>
                 </ScrollViewer>
             </TabItem>
