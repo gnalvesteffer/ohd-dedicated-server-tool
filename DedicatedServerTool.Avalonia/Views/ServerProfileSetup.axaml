@@ -23,8 +23,11 @@
                         </Grid>
                     </StackPanel>
                     <StackPanel Classes="form-group">
-                        <Button Classes="accent" Content="Download Server Files" Command="{Binding DownloadServerFilesCommand}" IsVisible="{Binding !IsDownloadingServerFiles}" IsEnabled="{Binding CanDownloadServerFiles}" />
-                        <Button Classes="accent" Content="Downloading... this may take a while..." IsVisible="{Binding IsDownloadingServerFiles}" IsEnabled="false" />
+                        <Panel IsVisible="{Binding !AreServerFilesInstalled}">
+                            <Button Classes="accent" Content="Download Server Files" Command="{Binding DownloadServerFilesCommand}" IsVisible="{Binding !IsDownloadingServerFiles}" IsEnabled="{Binding CanDownloadServerFiles}" />
+                            <Button Classes="accent" Content="Downloading... this may take a while..." IsVisible="{Binding IsDownloadingServerFiles}" IsEnabled="false" />
+                        </Panel>
+                        <TextBlock Classes="success" Text="Server files are installed!" IsVisible="{Binding AreServerFilesInstalled}" />
                     </StackPanel>
                 </StackPanel>
             </TabItem>
@@ -35,7 +38,7 @@
                         <TextBox Text="{Binding ServerProfile.ServerName}" />
                     </StackPanel>
                     <Grid>
-                        <Button Classes="accent" Content="Save" Command="{Binding SubmitServerProfileSetupCommand}" HorizontalAlignment="Left" />
+                        <Button Classes="accent" Content="Save" Command="{Binding SubmitServerProfileSetupCommand}" IsEnabled="{Binding CanSave}" HorizontalAlignment="Left" />
                         <Button Content="Discard" Command="{Binding DiscardServerProfileSetupCommand}" HorizontalAlignment="Right" />
                     </Grid>
                 </StackPanel>

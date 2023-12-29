@@ -7,15 +7,16 @@ internal static class SteamCmdUtility
     private static readonly int DedicatedServerAppId = 950900;
     private static readonly SteamCmd SteamCmd = new("steamcmd.exe");
 
-    public static Task<bool> DownloadDedicatedServerAsync(string installDirectory)
+    public static Task<(bool IsSuccessful, string Output)> DownloadOrUpdateDedicatedServerAsync(string installDirectory)
     {
-        return Task.Run(() =>
+        return Task.Run<(bool, string)>(() =>
         {
-            return SteamCmd.CreateCommand()
+            var isSuccessful = SteamCmd.CreateCommand()
              .WithAnonymousAuthentication()
              .InstallOrUpdateApp(DedicatedServerAppId)
              .WithWorkingDirectory(installDirectory)
-             .BuildAndTryToExecute(out _);
+             .BuildAndTryToExecute(out var output);
+            return (isSuccessful, output);
         });
     }
 }

@@ -45,7 +45,7 @@ public partial class AppViewModel : ViewModelBase
                 IsServerProfileSelected = value != null;
                 if (SelectedServerProfile != null)
                 {
-                    ServerProfileSetupViewModel = new(SelectedServerProfile, SubmitServerProfileSetupCommand, DiscardServerProfileSetupCommand);
+                    ServerProfileSetupViewModel = new(SelectedServerProfile, DeleteServerProfileSetupCommand);
                     ServerProfileSetupViewModel.TopLevel = TopLevel;
                 }
             }
@@ -75,8 +75,9 @@ public partial class AppViewModel : ViewModelBase
 
     public ICommand OpenInstallDirectoryCommand { get; }
     public ICommand CreateServerProfileCommand { get; }
+    public ICommand EditServerProfileCommand { get; }
     public ICommand SubmitServerProfileSetupCommand { get; }
-    public ICommand DiscardServerProfileSetupCommand { get; }
+    public ICommand DeleteServerProfileSetupCommand { get; }
     public ICommand SaveAppStateCommand { get; }
 
     public AppViewModel()
@@ -85,8 +86,8 @@ public partial class AppViewModel : ViewModelBase
         ServerProfiles = new ObservableCollection<ServerProfile>(_appState.ServerProfiles);
         OpenInstallDirectoryCommand = new RelayCommand(OpenInstallDirectory);
         CreateServerProfileCommand = new RelayCommand(CreateServerProfile);
-        SubmitServerProfileSetupCommand = new RelayCommand(SubmitServerProfileSetup);
-        DiscardServerProfileSetupCommand = new RelayCommand(DiscardServerProfileSetup);
+        EditServerProfileCommand = new RelayCommand(EditServerProfile);
+        DeleteServerProfileSetupCommand = new RelayCommand(DeleteServerProfileSetup);
         SaveAppStateCommand = new RelayCommand(SaveAppState);
         SelectedServerProfile = ServerProfiles.FirstOrDefault();
     }
@@ -111,20 +112,16 @@ public partial class AppViewModel : ViewModelBase
         SelectedServerProfile = serverProfile;
     }
 
-    private void SubmitServerProfileSetup()
+    private void EditServerProfile()
     {
         if (SelectedServerProfile == null)
         {
             return;
         }
-
-        bool HasName() => !string.IsNullOrWhiteSpace(SelectedServerProfile.ServerName);
-        bool AreServerFilesInstalled() => File.Exists(Path.Combine(SelectedServerProfile.InstallDirectory ?? string.Empty, @"HarshDoorstop\Binaries\Win64\HarshDoorstopServer-Win64-Shipping.exe"));
-
-        SelectedServerProfile.IsSetUp = HasName() && AreServerFilesInstalled();
+        SelectedServerProfile.IsSetUp = false;
     }
 
-    private void DiscardServerProfileSetup()
+    private void DeleteServerProfileSetup()
     {
         if (SelectedServerProfile == null)
         {

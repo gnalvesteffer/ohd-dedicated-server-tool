@@ -20,8 +20,8 @@ public class ServerProfileSetupViewModel : ObservableObject
         set => SetProperty(ref _serverProfile, value);
     }
 
-    private bool? _areServerFilesInstalled;
-    public bool? AreServerFilesInstalled
+    private bool _areServerFilesInstalled;
+    public bool AreServerFilesInstalled
     {
         get => _areServerFilesInstalled;
         set => SetProperty(ref _areServerFilesInstalled, value);
@@ -41,19 +41,26 @@ public class ServerProfileSetupViewModel : ObservableObject
         set => SetProperty(ref _isDownloadingServerFiles, value);
     }
 
+    private bool _canSave;
+    public bool CanSave
+    {
+        get => _canSave;
+        set => SetProperty(ref _canSave, value);
+    }
+
     public ICommand SelectInstallDirectoryCommand { get; }
     public ICommand SubmitServerProfileSetupCommand { get; }
     public ICommand DiscardServerProfileSetupCommand { get; }
     public ICommand DownloadServerFilesCommand { get; }
 
-    public ServerProfileSetupViewModel(ServerProfile serverProfile, ICommand onSubmitServerProfile, ICommand onDiscardServerProfile)
+    public ServerProfileSetupViewModel(ServerProfile serverProfile, ICommand onDiscardServerProfile)
     {
         _serverProfile = serverProfile;
         _serverProfile.PropertyChanged += _serverProfile_PropertyChanged;
         SelectInstallDirectoryCommand = new AsyncRelayCommand(SelectInstallDirectoryAsync);
-        SubmitServerProfileSetupCommand = onSubmitServerProfile;
+        SubmitServerProfileSetupCommand = new RelayCommand(SubmitServerProfileSetup);
         DiscardServerProfileSetupCommand = onDiscardServerProfile;
-        DownloadServerFilesCommand = new AsyncRelayCommand(DownloadServerFilesAsync);
+        DownloadServerFilesCommand = new AsyncRelayCommand(DownloadOrUpdateServerFilesAsync);
         UpdateServerFileProperties();
     }
 
@@ -63,18 +70,34 @@ public class ServerProfileSetupViewModel : ObservableObject
         {
             if (!Directory.Exists(ServerProfile.InstallDirectory))
             {
-                AreServerFilesInstalled = null;
+                AreServerFilesInstalled = false;
                 CanDownloadServerFiles = false;
                 return;
             }
             UpdateServerFileProperties();
         }
+        UpdateCanSave();
     }
 
     private void UpdateServerFileProperties()
     {
         AreServerFilesInstalled = File.Exists(Path.Combine(ServerProfile.InstallDirectory ?? string.Empty, @"HarshDoorstop\Binaries\Win64\HarshDoorstopServer-Win64-Shipping.exe"));
-        CanDownloadServerFiles = AreServerFilesInstalled == false;
+        CanDownloadServerFiles = Directory.Exists(ServerProfile.InstallDirectory) && !AreServerFilesInstalled;
+        UpdateCanSave();
+    }
+
+    private void UpdateCanSave()
+    {
+        CanSave = AreServerFilesInstalled && !string.IsNullOrWhiteSpace(ServerProfile.ServerName);
+    }
+
+    private void SubmitServerProfileSetup()
+    {
+        if (!CanSave)
+        {
+            return;
+        }
+        ServerProfile.IsSetUp = true;
     }
 
     private async Task SelectInstallDirectoryAsync()
@@ -85,14 +108,19 @@ public class ServerProfileSetupViewModel : ObservableObject
         }
 
         var result = await TopLevel.StorageProvider.OpenFolderPickerAsync(new() { Title = "Select server install directory..." });
+        if (!result.Any())
+        {
+            return;
+        }
         var installDirectory = result.FirstOrDefault()?.Path.LocalPath;
         ServerProfile.InstallDirectory = installDirectory ?? string.Empty;
     }
 
-    private async Task DownloadServerFilesAsync()
+    private async Task DownloadOrUpdateServerFilesAsync()
     {
         IsDownloadingServerFiles = true;
-        var isSuccess = await SteamCmdUtility.DownloadDedicatedServerAsync(ServerProfile.InstallDirectory);
+        var result = await SteamCmdUtility.DownloadOrUpdateDedicatedServerAsync(ServerProfile.InstallDirectory);
         IsDownloadingServerFiles = false;
+        UpdateServerFileProperties();
     }
 }
