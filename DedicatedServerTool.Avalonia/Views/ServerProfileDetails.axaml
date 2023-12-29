@@ -23,8 +23,8 @@
         </StackPanel>
 
         <Grid>
-            <Button Content="Edit Profile" Command="{Binding EditServerProfileCommand}" HorizontalAlignment="Left" />
-            <Button Content="Delete Profile" ToolTip.Tip="This will delete the profile from the launcher. The server files will remain on your system." Command="{Binding DeleteServerProfileSetupCommand}" HorizontalAlignment="Right" />
+            <Button Classes="accent" Content="Start Server" Command="{Binding StartServerCommand}" HorizontalAlignment="Left" />
+            <Button Content="Edit Profile" Command="{Binding EditServerProfileCommand}" HorizontalAlignment="Right" />
         </Grid>
     </StackPanel>
 </UserControl>

@@ -16,6 +16,9 @@
                 <ColorPaletteResources x:Key="Dark" Accent="#fff15c25" AltHigh="Black" AltLow="Black" AltMedium="Black" AltMediumHigh="Black" AltMediumLow="Black" BaseHigh="White" BaseLow="#ff313e4c" BaseMedium="#ff92a0af" BaseMediumHigh="#ffaab9c8" BaseMediumLow="#ff616f7e" ChromeAltLow="#ffaab9c8" ChromeBlackHigh="Black" ChromeBlackLow="#ffaab9c8" ChromeBlackMedium="Black" ChromeBlackMediumLow="Black" ChromeDisabledHigh="#ff313e4c" ChromeDisabledLow="#ff92a0af" ChromeGray="#ff7a8896" ChromeHigh="#ff7a8896" ChromeLow="#ff0a1d36" ChromeMedium="#ff14253b" ChromeMediumLow="#ff273646" ChromeWhite="White" ListLow="#ff14253b" ListMedium="#ff313e4c" RegionColor="#ff0a0b0d" />
             </FluentTheme.Palettes>
         </FluentTheme>
+        <Style Selector="TextBlock.form-group-header">
+            <Setter Property="FontSize" Value="18" />
+        </Style>
         <Style Selector="TextBlock.info">
             <Setter Property="FontSize" Value="10" />
         </Style>
@@ -30,6 +33,9 @@
             <Setter Property="Padding" Value="15" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="BorderBrush" Value="#ff7a8896" />
+        </Style>
+        <Style Selector="WrapPanel.form-group">
+            <Setter Property="Margin" Value="0,0,0,15" />
         </Style>
         <Style Selector="StackPanel.form-group">
             <Setter Property="Margin" Value="0,0,0,15" />

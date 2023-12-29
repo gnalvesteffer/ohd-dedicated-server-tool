@@ -37,9 +37,31 @@
                         <TextBlock Text="Server Name" />
                         <TextBox Text="{Binding ServerProfile.ServerName}" />
                     </StackPanel>
+                    <StackPanel>
+                        <TextBlock Classes="form-group-header" Text="Ports" />
+                        <TextBlock Classes="info" Text="Ensure that your router is configured to forward these ports to your system." />
+                        <WrapPanel Classes="form-group">
+                            <StackPanel Width="200" Margin="0,0,10,0">
+                                <TextBlock Text="Game" />
+                                <NumericUpDown Value="{Binding ServerProfile.Port}" Minimum="0" Maximum="65535" Increment="1" FormatString="0" />
+                            </StackPanel>
+                            <StackPanel Width="200" Margin="0,0,10,0">
+                                <TextBlock Text="Steam Client" />
+                                <TextBox Text="{Binding ServerProfile.ClientPort}" IsEnabled="False" IsReadOnly="True" />
+                            </StackPanel>
+                            <StackPanel Width="200" Margin="0,0,10,0">
+                                <TextBlock Text="Steam Query" />
+                                <NumericUpDown Value="{Binding ServerProfile.QueryPort}" Minimum="0" Maximum="65535" Increment="1" FormatString="0" />
+                            </StackPanel>
+                            <StackPanel Width="200" Margin="0,0,10,0">
+                                <TextBlock Text="RCON" />
+                                <NumericUpDown Value="{Binding ServerProfile.RconPort}" Minimum="0" Maximum="65535" Increment="1" FormatString="0" />
+                            </StackPanel>
+                        </WrapPanel>
+                    </StackPanel>
                     <Grid>
                         <Button Classes="accent" Content="Save" Command="{Binding SubmitServerProfileSetupCommand}" IsEnabled="{Binding CanSave}" HorizontalAlignment="Left" />
-                        <Button Content="Discard" Command="{Binding DiscardServerProfileSetupCommand}" HorizontalAlignment="Right" />
+                        <Button Content="Delete Profile" ToolTip.Tip="Deletes the profile from the launcher. The server files will still remain on your system." Command="{Binding DiscardServerProfileSetupCommand}" HorizontalAlignment="Right" />
                     </Grid>
                 </StackPanel>
             </TabItem>

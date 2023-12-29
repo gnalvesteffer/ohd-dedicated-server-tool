@@ -6,7 +6,6 @@ using System.Windows.Input;
 using Avalonia.Controls;
 using DedicatedServerTool.Avalonia.Models;
 using System.Diagnostics;
-using System.IO;
 
 namespace DedicatedServerTool.Avalonia.ViewModels;
 
@@ -78,6 +77,7 @@ public partial class AppViewModel : ViewModelBase
     public ICommand EditServerProfileCommand { get; }
     public ICommand SubmitServerProfileSetupCommand { get; }
     public ICommand DeleteServerProfileSetupCommand { get; }
+    public ICommand StartServerCommand { get; }
     public ICommand SaveAppStateCommand { get; }
 
     public AppViewModel()
@@ -88,6 +88,7 @@ public partial class AppViewModel : ViewModelBase
         CreateServerProfileCommand = new RelayCommand(CreateServerProfile);
         EditServerProfileCommand = new RelayCommand(EditServerProfile);
         DeleteServerProfileSetupCommand = new RelayCommand(DeleteServerProfileSetup);
+        StartServerCommand = new RelayCommand(StartServer);
         SaveAppStateCommand = new RelayCommand(SaveAppState);
         SelectedServerProfile = ServerProfiles.FirstOrDefault();
     }
@@ -106,7 +107,10 @@ public partial class AppViewModel : ViewModelBase
     {
         var serverProfile = new ServerProfile
         {
-            ServerName = "My OHD Server"
+            ServerName = "My OHD Server",
+            Port = 7777,
+            RconPort = 7779,
+            QueryPort = 27005,
         };
         ServerProfiles.Add(serverProfile);
         SelectedServerProfile = serverProfile;
@@ -130,6 +134,11 @@ public partial class AppViewModel : ViewModelBase
 
         ServerProfiles.Remove(SelectedServerProfile);
         SelectedServerProfile = null;
+    }
+
+    private void StartServer()
+    {
+        ServerUtility.StartServer(SelectedServerProfile);
     }
 
     private void SaveAppState()
