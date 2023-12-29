@@ -9,7 +9,7 @@
         Width="640"
         Height="480"
         Icon="/Assets/ohd.ico"
-        Title="Scan Results">
+        Title="Asset Scanner">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -22,7 +22,7 @@
         <ScrollViewer Grid.Row="1">
             <StackPanel>
                 <WrapPanel>
-                    <Button Content="Scan Vanilla Maps" Command="{Binding FindVanillaMapsCommand}" />
+                    <Button Content="Scan Game Maps" Command="{Binding FindVanillaMapsCommand}" />
                     <Button Content="Scan Mod Maps" Command="{Binding FindModMapsCommand}" />
                 </WrapPanel>
                 <ListBox ItemsSource="{Binding Results}">

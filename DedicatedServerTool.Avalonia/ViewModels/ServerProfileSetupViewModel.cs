@@ -53,7 +53,7 @@ public class ServerProfileSetupViewModel : ObservableObject
     public ICommand SubmitServerProfileSetupCommand { get; }
     public ICommand DiscardServerProfileSetupCommand { get; }
     public ICommand DownloadServerFilesCommand { get; }
-    public ICommand BrowseMapsCommand { get; }
+    public ICommand OpenAssetScannerCommand { get; }
 
     public ServerProfileSetupViewModel(ServerProfile serverProfile, ICommand onDiscardServerProfile)
     {
@@ -63,7 +63,7 @@ public class ServerProfileSetupViewModel : ObservableObject
         SubmitServerProfileSetupCommand = new RelayCommand(SubmitServerProfileSetup);
         DiscardServerProfileSetupCommand = onDiscardServerProfile;
         DownloadServerFilesCommand = new AsyncRelayCommand(DownloadOrUpdateServerFilesAsync);
-        BrowseMapsCommand = new RelayCommand(BrowseMaps);
+        OpenAssetScannerCommand = new RelayCommand(OpenAssetScanner);
         UpdateServerFileProperties();
     }
 
@@ -127,7 +127,7 @@ public class ServerProfileSetupViewModel : ObservableObject
         UpdateServerFileProperties();
     }
 
-    private void BrowseMaps()
+    private void OpenAssetScanner()
     {
         var scanWindow = new PakScanWindow(ServerProfile);
         scanWindow.Show();
