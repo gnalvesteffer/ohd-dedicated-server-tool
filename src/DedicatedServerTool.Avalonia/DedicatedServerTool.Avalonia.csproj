@@ -32,6 +32,15 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Compile Update="Views\WorkshopMod.axaml.cs">
+        <DependentUpon>WorkshopMod.axaml</DependentUpon>
+      </Compile>
+      <Compile Update="Views\WorkshopModList.axaml.cs">
+        <DependentUpon>WorkshopModList.axaml</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
         <None Update="appstate.json">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>

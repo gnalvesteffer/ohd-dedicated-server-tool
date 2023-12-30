@@ -51,7 +51,7 @@ public class ServerProfileDetailsViewModel : ObservableObject
     private Task UpdateServerAndModsAsync()
     {
         var updateServerTask = SteamCmdUtility.DownloadOrUpdateDedicatedServerAsync(ServerProfile.InstallDirectory);
-        var updateModsTask = Parallel.ForEachAsync(ServerProfile.WorkshopIds, async (workshopId, cancellationToken) =>
+        var updateModsTask = Parallel.ForEachAsync(ServerProfile.GetInstalledWorkshopIds(), async (workshopId, cancellationToken) =>
         {
             if (cancellationToken.IsCancellationRequested)
             {

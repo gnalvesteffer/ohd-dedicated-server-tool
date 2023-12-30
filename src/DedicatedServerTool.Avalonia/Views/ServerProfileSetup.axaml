@@ -202,7 +202,7 @@
             </TabItem>
             <TabItem Header="Mods">
                 <ScrollViewer>
-                    <local:WorkshopModsList DataContext="{Binding}" />
+                    <local:WorkshopModList DataContext="{Binding}" />
                 </ScrollViewer>
             </TabItem>
         </TabControl>

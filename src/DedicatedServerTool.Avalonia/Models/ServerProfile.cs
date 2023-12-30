@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using DedicatedServerTool.Avalonia.Core;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
@@ -198,10 +199,8 @@ public class ServerProfile : ObservableObject
         set => SetProperty(ref _isAutoBalanceEnabled, value);
     }
 
-    private ObservableCollection<long> _workshopIds = new();
-    public ObservableCollection<long> WorkshopIds
+    public IEnumerable<long> GetInstalledWorkshopIds()
     {
-        get => _workshopIds;
-        set => SetProperty(ref _workshopIds, value);
+        return InstalledWorkshopModUtility.GetInstalledWorkshopIds(InstallDirectory);
     }
 }

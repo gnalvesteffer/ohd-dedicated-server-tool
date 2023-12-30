@@ -4,6 +4,8 @@ using CommunityToolkit.Mvvm.Input;
 using DedicatedServerTool.Avalonia.Core;
 using DedicatedServerTool.Avalonia.Models;
 using DedicatedServerTool.Avalonia.Views;
+using System;
+using System.Collections;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
@@ -41,6 +43,13 @@ public class ServerProfileSetupViewModel : ObservableObject
     {
         get => _isDownloadingServerFiles;
         set => SetProperty(ref _isDownloadingServerFiles, value);
+    }
+
+    private ObservableCollection<long> _installedWorkshopIds = new();
+    public ObservableCollection<long> InstalledWorkshopIds
+    {
+        get => _installedWorkshopIds;
+        set => SetProperty(ref _installedWorkshopIds, value);
     }
 
     private long? _enteredWorkshopId;
@@ -84,6 +93,7 @@ public class ServerProfileSetupViewModel : ObservableObject
         AddWorkshopIdCommand = new AsyncRelayCommand(AddWorkshopIdAsync);
         RemoveWorkshopIdCommand = new AsyncRelayCommand(RemoveWorkshopIdAsync);
         UpdateServerFileProperties();
+        RehydrateInstalledWorkshopIds();
     }
 
     private void _serverProfile_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -97,6 +107,7 @@ public class ServerProfileSetupViewModel : ObservableObject
                 return;
             }
             UpdateServerFileProperties();
+            RehydrateInstalledWorkshopIds();
         }
         UpdateCanSave();
     }
@@ -160,36 +171,40 @@ public class ServerProfileSetupViewModel : ObservableObject
         scanWindow.Show();
     }
 
-    private Task AddWorkshopIdAsync()
+    private async Task AddWorkshopIdAsync()
     {
         if (!EnteredWorkshopId.HasValue)
         {
-            return Task.CompletedTask;
+            return;
         }
 
-        if (ServerProfile.WorkshopIds.Contains(EnteredWorkshopId.Value))
+        RehydrateInstalledWorkshopIds();
+        if (InstalledWorkshopIds.Contains(EnteredWorkshopId.Value))
         {
             EnteredWorkshopId = null;
-            return Task.CompletedTask;
+            return;
         }
 
         var workshopId = EnteredWorkshopId.Value;
-        ServerProfile.WorkshopIds.Add(workshopId);
         EnteredWorkshopId = null;
 
-        return SteamCmdUtility.DownloadOrUpdateModAsync(ServerProfile.InstallDirectory, workshopId);
+        await SteamCmdUtility.DownloadOrUpdateModAsync(ServerProfile.InstallDirectory, workshopId);
+        RehydrateInstalledWorkshopIds();
     }
 
-    private Task RemoveWorkshopIdAsync()
+    private async Task RemoveWorkshopIdAsync()
     {
         if (!SelectedWorkshopId.HasValue)
         {
-            return Task.CompletedTask;
+            return;
         }
 
         var workshopId = SelectedWorkshopId.Value;
-        ServerProfile.WorkshopIds.Remove(workshopId);
-
-        return SteamCmdUtility.UnsubscribeFromModAsync(ServerProfile.InstallDirectory, workshopId);
+        await SteamCmdUtility.UnsubscribeFromModAsync(ServerProfile.InstallDirectory, workshopId);
+        RehydrateInstalledWorkshopIds();
+    }
+    private void RehydrateInstalledWorkshopIds()
+    {
+        InstalledWorkshopIds = new(ServerProfile.GetInstalledWorkshopIds());
     }
 }
