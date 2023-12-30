@@ -110,11 +110,13 @@ public partial class AppViewModel : ViewModelBase
             Port = 7777,
             RconPort = 7779,
             QueryPort = 27005,
-            MinPlayers= 1,
+            MinPlayers = 1,
             MaxPlayers = 16,
             BluforBotCount = 0,
             OpforBotCount = 0,
-            MapCycleText = "Argonne\nMontecassino\nLamDong\nKhafji_P\nRisala"
+            IsAutoBalanceEnabled = true,
+            InitialMapName = "Risala",
+            MapCycleText = "Argonne\nMontecassino\nLamDong\nKhafji_P\nRisala",
         };
 
         ServerProfiles.Add(serverProfile);

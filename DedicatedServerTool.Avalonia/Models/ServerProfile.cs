@@ -190,4 +190,11 @@ public class ServerProfile : ObservableObject
         get => _isFriendlyFireEnabled;
         set => SetProperty(ref _isFriendlyFireEnabled, value);
     }
+
+    private bool _isAutoBalanceEnabled;
+    public bool IsAutoBalanceEnabled
+    {
+        get => _isAutoBalanceEnabled;
+        set => SetProperty(ref _isAutoBalanceEnabled, value);
+    }
 }

@@ -112,22 +112,19 @@
                                 <TextBox Text="{Binding ServerProfile.InitialMapName}" />
                             </StackPanel>
                             <StackPanel Classes="form-group" Width="300" Margin="0,0,10,0" VerticalAlignment="Bottom">
-                                <WrapPanel>
-                                    <TextBlock Text="Gamemode" />
-                                    <TextBlock Classes="attention" Text="*" />
-                                </WrapPanel>
-                                <TextBlock Classes="info" TextWrapping="Wrap" Text="The path of the gamemode class. For mod gamemodes, consult their respective workshop pages for the path to use." />
+                                <TextBlock Text="Gamemode" />
+                                <TextBlock Classes="info" TextWrapping="Wrap" Text="The path of the gamemode class. For mod gamemodes, consult their respective workshop pages for the path to use. Leave blank to use the default gamemode defined by the map." />
                                 <TextBox Text="{Binding ServerProfile.GameModePath}" />
                             </StackPanel>
                         </WrapPanel>
                         <WrapPanel Classes="form-group">
                             <StackPanel Classes="form-group" Width="300" Margin="0,0,10,0" VerticalAlignment="Bottom">
-                                <TextBlock Text="Custom Blufor Faction" />
+                                <TextBlock Text="Blufor Faction" />
                                 <TextBlock Classes="info" TextWrapping="Wrap" Text="Leave blank to use the default provided by the map. For mod factions, consult their respective workshop page for the name to use." />
                                 <TextBox Text="{Binding ServerProfile.BluforFactionName}" />
                             </StackPanel>
                             <StackPanel Classes="form-group" Width="300" Margin="0,0,10,0" VerticalAlignment="Bottom">
-                                <TextBlock Text="Custom Opfor Faction" />
+                                <TextBlock Text="Opfor Faction" />
                                 <TextBlock Classes="info" TextWrapping="Wrap" Text="Leave blank to use the default provided by the map. For mod factions, consult their respective workshop page for the name to use" />
                                 <TextBox Text="{Binding ServerProfile.OpforFactionName}" />
                             </StackPanel>
@@ -188,7 +185,10 @@
                                 <CheckBox Content="Enable Friendly Fire" ToolTip.Tip="If checked, will allow team members to damage each other." IsChecked="{Binding ServerProfile.IsFriendlyFireEnabled}" />
                             </StackPanel>
                             <StackPanel Classes="form-group" Margin="0,10,10,0" VerticalAlignment="Bottom">
-                                <CheckBox Content="Autofill Bots" ToolTip.Tip="Enables bot-autofill feature." IsChecked="{Binding ServerProfile.IsBotAutoFillEnabled}" />
+                                <CheckBox Content="Autofill Bots" ToolTip.Tip="When enabled, the game will fill empty slots with bots to satisfy the minimum player count and remove them if human players join to take their place. Ensure that either the bot count settings allow for enough bots to fill the Min Player count, or that the bot counts are left blank to automatically adjust the number of bots to spawn." IsChecked="{Binding ServerProfile.IsBotAutoFillEnabled}" />
+                            </StackPanel>
+                            <StackPanel Classes="form-group" Margin="0,10,10,0" VerticalAlignment="Bottom">
+                                <CheckBox Content="Enable Auto-Balance" ToolTip.Tip="When enabled, teams will automatically be balanced." IsChecked="{Binding ServerProfile.IsAutoBalanceEnabled}" />
                             </StackPanel>
                         </WrapPanel>
                         <StackPanel Classes="form-group">

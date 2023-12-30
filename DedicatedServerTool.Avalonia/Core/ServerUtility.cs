@@ -11,6 +11,10 @@ internal static class ServerUtility
     {
         var queryParameters = new StringBuilder();
         queryParameters.Append($"?game={profile.GameModePath.Trim()}");
+        if (!string.IsNullOrWhiteSpace(profile.ServerPassword))
+        {
+            queryParameters.Append($"?Password={profile.ServerPassword}");
+        }
         if (profile.MinPlayers.HasValue)
         {
             queryParameters.Append($"?MinPlayers={profile.MinPlayers}");
@@ -49,7 +53,7 @@ internal static class ServerUtility
         }
         if (profile.IsBotAutoFillEnabled)
         {
-            queryParameters.Append($"?BotAutofill");
+            queryParameters.Append($"?bBotAutofill");
         }
         if (profile.TeamIdToAutoAssignHumans.HasValue)
         {
@@ -82,29 +86,32 @@ internal static class ServerUtility
 
     private static void WriteGameIni(ServerProfile profile)
     {
-        var gameIniPath = Path.Combine(profile.InstallDirectory, @"HarshDoorstop\Saved\Config\WindowsServer\Game.ini");
-
         var gameIniContents = new StringBuilder();
 
+        var gameIniPath = Path.Combine(profile.InstallDirectory, @"HarshDoorstop\Saved\Config\WindowsServer\Game.ini");
+        Directory.CreateDirectory(Path.GetDirectoryName(gameIniPath)!);
         File.WriteAllText(gameIniPath, gameIniContents.ToString());
     }
 
     private static void WriteEngineIni(ServerProfile profile)
     {
-        var engineIniPath = Path.Combine(profile.InstallDirectory, @"HarshDoorstop\Saved\Config\WindowsServer\Engine.ini");
-
         var engineIniContents = new StringBuilder();
         engineIniContents.AppendLine("[SystemSettings]");
         engineIniContents.AppendLine($"Game.FriendlyFire={Convert.ToInt32(profile.IsFriendlyFireEnabled)}");
         engineIniContents.AppendLine($"HD.Game.MinRespawnDelayOverride={profile.RespawnDurationSeconds}");
         engineIniContents.AppendLine($"HD.Game.DisableKitRestrictionsOverride={Convert.ToInt32(profile.ShouldDisableKitRestrictions)}");
+        engineIniContents.AppendLine($"Game.AutoBalanceTeamsOverride={Convert.ToInt32(profile.IsAutoBalanceEnabled)}");
 
+        var engineIniPath = Path.Combine(profile.InstallDirectory, @"HarshDoorstop\Saved\Config\WindowsServer\Engine.ini");
+        Directory.CreateDirectory(Path.GetDirectoryName(engineIniPath)!);
         File.WriteAllText(engineIniPath, engineIniContents.ToString());
     }
 
     private static void WriteMapCycleConfig(ServerProfile profile)
     {
         var mapCycleConfigPath = Path.Combine(profile.InstallDirectory, @"HarshDoorstop\Saved\Config\WindowsServer\MapCycle.cfg");
+        Directory.CreateDirectory(Path.GetDirectoryName(mapCycleConfigPath)!);
         File.WriteAllText(mapCycleConfigPath, profile.MapCycleText.Trim());
     }
+
 }
