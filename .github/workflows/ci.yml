@@ -1,0 +1,50 @@
+name: Publish Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+    permissions:
+      contents: write
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '6.0.x'
+
+    - name: Build and Publish
+      run: |
+        cd src/
+        dotnet publish -r win-x64 -c Release --self-contained
+
+    - name: Zip Release Build
+      if: github.event_name != 'pull_request'
+      uses: vimtor/action-zip@v1.1
+      with:
+        files: src/DedicatedServerTool.Avalonia/bin/x64/Release/net6.0-windows/win-x64/publish
+        dest: artifacts/ohd-dedicated-server-tool.zip
+
+    - name: Get Assembly Version
+      id: version
+      run: |
+        cd "src\DedicatedServerTool.Avalonia\bin\x64\Release\net6.0-windows\win-x64\"
+        $version = (Get-Command '.\DedicatedServerTool.Avalonia.exe').FileVersionInfo.FileVersion
+        echo "Assembly Version: $version"
+        echo "::set-output name=version::$version"
+
+    - name: Create Release
+      if: github.event_name != 'pull_request'
+      uses: softprops/action-gh-release@v1
+      with:
+        token: ${{ github.token }}
+        tag_name: ${{ steps.version.outputs.version }}
+        name: "OHD Dedicated Server Tool"
+        files: artifacts/*
