@@ -6,10 +6,12 @@ using System.Windows.Input;
 using Avalonia.Controls;
 using DedicatedServerTool.Avalonia.Models;
 using System.Diagnostics;
+using System.Threading.Tasks;
+using System.Reflection;
 
 namespace DedicatedServerTool.Avalonia.ViewModels;
 
-public partial class AppViewModel : ViewModelBase
+internal partial class AppViewModel : ViewModelBase
 {
     private readonly AppState _appState;
 
@@ -20,12 +22,18 @@ public partial class AppViewModel : ViewModelBase
         set
         {
             _topLevel = value;
+            if (ServerProfileDetailsViewModel != null)
+            {
+                ServerProfileDetailsViewModel.TopLevel = value;
+            }
             if (ServerProfileSetupViewModel != null)
             {
                 ServerProfileSetupViewModel.TopLevel = value;
             }
         }
     }
+
+    public string AppTitle => $"OHD Dedicated Server Tool v{Assembly.GetEntryAssembly()!.GetName().Version} by Xorberax";
 
     public ObservableCollection<ServerProfile> ServerProfiles
     {
@@ -46,6 +54,8 @@ public partial class AppViewModel : ViewModelBase
                 {
                     ServerProfileSetupViewModel = new(SelectedServerProfile, DeleteServerProfileSetupCommand);
                     ServerProfileSetupViewModel.TopLevel = TopLevel;
+                    ServerProfileDetailsViewModel = new(SelectedServerProfile);
+                    ServerProfileDetailsViewModel.TopLevel = TopLevel;
                 }
             }
         }
@@ -72,34 +82,25 @@ public partial class AppViewModel : ViewModelBase
         set => SetProperty(ref _serverProfileSetupViewModel, value);
     }
 
-    public ICommand OpenInstallDirectoryCommand { get; }
+    private ServerProfileDetailsViewModel? _serverProfileDetailsViewModel;
+    public ServerProfileDetailsViewModel? ServerProfileDetailsViewModel
+    {
+        get => _serverProfileDetailsViewModel;
+        set => SetProperty(ref _serverProfileDetailsViewModel, value);
+    }
+
     public ICommand CreateServerProfileCommand { get; }
-    public ICommand EditServerProfileCommand { get; }
     public ICommand DeleteServerProfileSetupCommand { get; }
-    public ICommand StartServerCommand { get; }
     public ICommand SaveAppStateCommand { get; }
 
     public AppViewModel()
     {
         _appState = AppStateRepository.Load();
         ServerProfiles = new ObservableCollection<ServerProfile>(_appState.ServerProfiles);
-        OpenInstallDirectoryCommand = new RelayCommand(OpenInstallDirectory);
         CreateServerProfileCommand = new RelayCommand(CreateServerProfile);
-        EditServerProfileCommand = new RelayCommand(EditServerProfile);
         DeleteServerProfileSetupCommand = new RelayCommand(DeleteServerProfileSetup);
-        StartServerCommand = new RelayCommand(StartServer);
         SaveAppStateCommand = new RelayCommand(SaveAppState);
         SelectedServerProfile = ServerProfiles.FirstOrDefault();
-    }
-
-    private void OpenInstallDirectory()
-    {
-        if (SelectedServerProfile == null || TopLevel == null)
-        {
-            return;
-        }
-
-        Process.Start("explorer", SelectedServerProfile.InstallDirectory);
     }
 
     private void CreateServerProfile()
@@ -123,15 +124,6 @@ public partial class AppViewModel : ViewModelBase
         SelectedServerProfile = serverProfile;
     }
 
-    private void EditServerProfile()
-    {
-        if (SelectedServerProfile == null)
-        {
-            return;
-        }
-        SelectedServerProfile.IsSetUp = false;
-    }
-
     private void DeleteServerProfileSetup()
     {
         if (SelectedServerProfile == null)
@@ -141,16 +133,6 @@ public partial class AppViewModel : ViewModelBase
 
         ServerProfiles.Remove(SelectedServerProfile);
         SelectedServerProfile = null;
-    }
-
-    private void StartServer()
-    {
-        if (SelectedServerProfile == null)
-        {
-            return;
-        }
-
-        ServerUtility.StartServer(SelectedServerProfile);
     }
 
     private void SaveAppState()

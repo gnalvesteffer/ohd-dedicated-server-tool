@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace DedicatedServerTool.Avalonia.ViewModels;
-public class ServerProfileSetupViewModel : ObservableObject
+internal class ServerProfileSetupViewModel : ObservableObject
 {
     public TopLevel? TopLevel;
 
@@ -91,7 +91,15 @@ public class ServerProfileSetupViewModel : ObservableObject
 
     private void UpdateCanSave()
     {
-        CanSave = AreServerFilesInstalled && !string.IsNullOrWhiteSpace(ServerProfile.ServerName);
+        CanSave = 
+            AreServerFilesInstalled && 
+            !string.IsNullOrWhiteSpace(ServerProfile.ServerName) &&
+            ServerProfile.Port.HasValue &&
+            ServerProfile.ClientPort.HasValue &&
+            ServerProfile.QueryPort.HasValue &&
+            ServerProfile.RconPort.HasValue &&
+            !string.IsNullOrWhiteSpace(ServerProfile.InitialMapName) &&
+            ServerProfile.MaxPlayers.HasValue;
     }
 
     private void SubmitServerProfileSetup()

@@ -1,51 +1,40 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
-    <Nullable>enable</Nullable>
-    <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
-    <ApplicationManifest>app.manifest</ApplicationManifest>
-    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
-  </PropertyGroup>
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net6.0-windows</TargetFramework>
+        <Nullable>enable</Nullable>
+        <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+        <ApplicationManifest>app.manifest</ApplicationManifest>
+        <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+        <ApplicationIcon>Assets\ohd.ico</ApplicationIcon>
+        <Version>0.1.0</Version>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <AvaloniaResource Include="Assets\**" />
-  </ItemGroup>
+    <ItemGroup>
+        <AvaloniaResource Include="Assets\**" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <None Remove="Assets\background.png" />
-    <None Remove="Assets\ohd.ico" />
-  </ItemGroup>
+    <ItemGroup>
+        <None Remove="Assets\background.png" />
+        <None Remove="Assets\ohd.ico" />
+    </ItemGroup>
 
+    <ItemGroup>
+        <PackageReference Include="Avalonia" Version="11.0.6" />
+        <PackageReference Include="Avalonia.Desktop" Version="11.0.6" />
+        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.6" />
+        <PackageReference Include="Avalonia.Fonts.Inter" Version="11.0.6" />
+        <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.6" />
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Avalonia" Version="11.0.6" />
-    <PackageReference Include="Avalonia.Desktop" Version="11.0.6" />
-    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.6" />
-    <PackageReference Include="Avalonia.Fonts.Inter" Version="11.0.6" />
-    <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-    <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.6" />
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
-    <PackageReference Include="koskit.SteamCmdFluentApi" Version="1.0.5" />
-  </ItemGroup>
-
-
-  <ItemGroup>
-    <Compile Update="Views\PakScanWindow.axaml.cs">
-      <DependentUpon>PakScanWindow.axaml</DependentUpon>
-    </Compile>
-    <Compile Update="Views\ServerProfileSetup.axaml.cs">
-      <DependentUpon>ServerProfileSetup.axaml</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
-
-  <ItemGroup>
-    <None Update="appstate.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="steamcmd.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
+    <ItemGroup>
+        <None Update="appstate.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="steamcmd.exe">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
 </Project>

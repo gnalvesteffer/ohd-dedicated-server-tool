@@ -10,7 +10,7 @@
         Width="1024"
         Height="768"
         Icon="/Assets/ohd.ico"
-        Title="OHD Dedicated Server Tool">
+        Title="{Binding AppTitle}">
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -22,7 +22,7 @@
         <local:ServerProfileList Grid.Column="0" />
         <Border BoxShadow="0 0 15 0 #5000" Grid.Column="1">
             <Panel IsVisible="{Binding IsServerProfileSelected}">
-                <local:ServerProfileDetails DataContext="{Binding}" IsVisible="{Binding SelectedServerProfile.IsSetUp}" Margin="10" />
+                <local:ServerProfileDetails DataContext="{Binding ServerProfileDetailsViewModel}" IsVisible="{Binding ServerProfile.IsSetUp}" Margin="10" />
                 <local:ServerProfileSetup DataContext="{Binding ServerProfileSetupViewModel}" IsVisible="{Binding !ServerProfile.IsSetUp}" Margin="10" />
             </Panel>
         </Border>

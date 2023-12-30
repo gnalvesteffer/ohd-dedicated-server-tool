@@ -201,7 +201,8 @@
             </TabItem>
             <TabItem Header="Mods">
                 <ScrollViewer>
-                    <StackPanel>
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBlock Text="UNDER CONSTRUCTION" FontSize="48" />
                     </StackPanel>
                 </ScrollViewer>
             </TabItem>
