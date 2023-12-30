@@ -32,11 +32,19 @@ jobs:
         files: rc/DedicatedServerTool.Avalonia/bin/x64/Release/net6.0-windows/win-x64/publish
         dest: artifacts/ohd-dedicated-server-tool.zip
 
+    - name: Get Assembly Version
+      id: version
+      run: |
+        cd "src\DedicatedServerTool.Avalonia\bin\x64\Release\net6.0-windows\win-x64\"
+        $version = (Get-Command '.\DedicatedServerTool.Avalonia.exe').FileVersionInfo.FileVersion
+        echo "Assembly Version: $version"
+        echo "::set-output name=version::$version"
+
     - name: Create Release
       if: github.event_name != 'pull_request'
       uses: softprops/action-gh-release@v1
       with:
         token: ${{ github.token }}
-        tag_name: ${{ github.ref }}
+        tag_name: ${{ steps.version.outputs.version }}
         name: "OHD Dedicated Server Tool"
         files: artifacts/*
