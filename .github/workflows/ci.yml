@@ -23,17 +23,18 @@ jobs:
         cd src/
         dotnet publish -r win-x64 -c Release --self-contained
 
-    - name: Create Release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Zip Release Build
+      if: github.event_name != 'pull_request'
+      uses: vimtor/action-zip@v1.1
       with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
+        files: rc/DedicatedServerTool.Avalonia/bin/x64/Release/net6.0-windows/win-x64/publish
+        dest: artifacts/ohd-dedicated-server-tool.zip
 
-    - name: Upload Artifacts
-      uses: actions/upload-artifact@v2
+    - name: Create Release
+      if: github.event_name != 'pull_request'
+      uses: softprops/action-gh-release@v1
       with:
-        name: Release-Artifacts
-        path: src/DedicatedServerTool.Avalonia/bin/x64/Release/net6.0-windows/win-x64/publish/*
+        token: ${{ github.token }}
+        tag_name: ${{ github.ref }}"
+        name: "OHD Dedicated Server Tool"
+        files: artifacts/*
