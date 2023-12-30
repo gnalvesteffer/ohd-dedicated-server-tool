@@ -197,4 +197,11 @@ public class ServerProfile : ObservableObject
         get => _isAutoBalanceEnabled;
         set => SetProperty(ref _isAutoBalanceEnabled, value);
     }
+
+    private ObservableCollection<long> _workshopIds = new();
+    public ObservableCollection<long> WorkshopIds
+    {
+        get => _workshopIds;
+        set => SetProperty(ref _workshopIds, value);
+    }
 }

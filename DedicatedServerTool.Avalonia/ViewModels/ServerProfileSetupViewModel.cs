@@ -4,13 +4,14 @@ using CommunityToolkit.Mvvm.Input;
 using DedicatedServerTool.Avalonia.Core;
 using DedicatedServerTool.Avalonia.Models;
 using DedicatedServerTool.Avalonia.Views;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace DedicatedServerTool.Avalonia.ViewModels;
-internal class ServerProfileSetupViewModel : ObservableObject
+public class ServerProfileSetupViewModel : ObservableObject
 {
     public TopLevel? TopLevel;
 
@@ -42,6 +43,20 @@ internal class ServerProfileSetupViewModel : ObservableObject
         set => SetProperty(ref _isDownloadingServerFiles, value);
     }
 
+    private long? _enteredWorkshopId;
+    public long? EnteredWorkshopId
+    {
+        get => _enteredWorkshopId;
+        set => SetProperty(ref _enteredWorkshopId, value);
+    }
+
+    private long? _selectedWorkshopId;
+    public long? SelectedWorkshopId
+    {
+        get => _selectedWorkshopId;
+        set => SetProperty(ref _selectedWorkshopId, value);
+    }
+
     private bool _canSave;
     public bool CanSave
     {
@@ -54,6 +69,8 @@ internal class ServerProfileSetupViewModel : ObservableObject
     public ICommand DiscardServerProfileSetupCommand { get; }
     public ICommand DownloadServerFilesCommand { get; }
     public ICommand OpenAssetScannerCommand { get; }
+    public ICommand AddWorkshopIdCommand { get; }
+    public ICommand RemoveWorkshopIdCommand { get; }
 
     public ServerProfileSetupViewModel(ServerProfile serverProfile, ICommand onDiscardServerProfile)
     {
@@ -64,6 +81,8 @@ internal class ServerProfileSetupViewModel : ObservableObject
         DiscardServerProfileSetupCommand = onDiscardServerProfile;
         DownloadServerFilesCommand = new AsyncRelayCommand(DownloadOrUpdateServerFilesAsync);
         OpenAssetScannerCommand = new RelayCommand(OpenAssetScanner);
+        AddWorkshopIdCommand = new AsyncRelayCommand(AddWorkshopIdAsync);
+        RemoveWorkshopIdCommand = new AsyncRelayCommand(RemoveWorkshopIdAsync);
         UpdateServerFileProperties();
     }
 
@@ -139,5 +158,38 @@ internal class ServerProfileSetupViewModel : ObservableObject
     {
         var scanWindow = new PakScanWindow(ServerProfile);
         scanWindow.Show();
+    }
+
+    private Task AddWorkshopIdAsync()
+    {
+        if (!EnteredWorkshopId.HasValue)
+        {
+            return Task.CompletedTask;
+        }
+
+        if (ServerProfile.WorkshopIds.Contains(EnteredWorkshopId.Value))
+        {
+            EnteredWorkshopId = null;
+            return Task.CompletedTask;
+        }
+
+        var workshopId = EnteredWorkshopId.Value;
+        ServerProfile.WorkshopIds.Add(workshopId);
+        EnteredWorkshopId = null;
+
+        return SteamCmdUtility.DownloadOrUpdateModAsync(ServerProfile.InstallDirectory, workshopId);
+    }
+
+    private Task RemoveWorkshopIdAsync()
+    {
+        if (!SelectedWorkshopId.HasValue)
+        {
+            return Task.CompletedTask;
+        }
+
+        var workshopId = SelectedWorkshopId.Value;
+        ServerProfile.WorkshopIds.Remove(workshopId);
+
+        return SteamCmdUtility.UnsubscribeFromModAsync(ServerProfile.InstallDirectory, workshopId);
     }
 }

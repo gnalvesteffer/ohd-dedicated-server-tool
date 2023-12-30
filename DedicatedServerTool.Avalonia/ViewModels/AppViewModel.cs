@@ -11,7 +11,7 @@ using System.Reflection;
 
 namespace DedicatedServerTool.Avalonia.ViewModels;
 
-internal partial class AppViewModel : ViewModelBase
+public partial class AppViewModel : ViewModelBase
 {
     private readonly AppState _appState;
 

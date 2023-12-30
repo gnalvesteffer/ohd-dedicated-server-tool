@@ -8,6 +8,8 @@
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
         <ApplicationIcon>Assets\ohd.ico</ApplicationIcon>
         <Version>0.1.0</Version>
+        <PublishTrimmed>true</PublishTrimmed>
+        <Platforms>x64</Platforms>
     </PropertyGroup>
 
     <ItemGroup>

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace DedicatedServerTool.Avalonia.ViewModels;
-internal class ServerProfileDetailsViewModel : ObservableObject
+public class ServerProfileDetailsViewModel : ObservableObject
 {
     public TopLevel? TopLevel;
 
@@ -26,7 +26,7 @@ internal class ServerProfileDetailsViewModel : ObservableObject
 
     public ServerProfileDetailsViewModel(ServerProfile profile)
     {
-        ServerProfile = profile;
+        _serverProfile = profile;
         OpenInstallDirectoryCommand = new RelayCommand(OpenInstallDirectory);
         EditServerProfileCommand = new RelayCommand(EditServerProfile);
         UpdateServerAndModsCommand = new AsyncRelayCommand(UpdateServerAndModsAsync);
@@ -50,7 +50,16 @@ internal class ServerProfileDetailsViewModel : ObservableObject
 
     private Task UpdateServerAndModsAsync()
     {
-        return SteamCmdUtility.DownloadOrUpdateDedicatedServerAsync(ServerProfile.InstallDirectory);
+        var updateServerTask = SteamCmdUtility.DownloadOrUpdateDedicatedServerAsync(ServerProfile.InstallDirectory);
+        var updateModsTask = Parallel.ForEachAsync(ServerProfile.WorkshopIds, async (workshopId, cancellationToken) =>
+        {
+            if (cancellationToken.IsCancellationRequested)
+            {
+                return;
+            }
+            await SteamCmdUtility.DownloadOrUpdateModAsync(ServerProfile.InstallDirectory, workshopId);
+        });
+        return Task.WhenAll(updateServerTask, updateModsTask);
     }
 
     private void StartServer()

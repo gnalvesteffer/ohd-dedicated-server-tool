@@ -1,0 +1,32 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:DedicatedServerTool.Avalonia.ViewModels"
+             x:DataType="vm:ServerProfileSetupViewModel"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+             x:Class="DedicatedServerTool.Avalonia.Views.WorkshopModsList">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <ListBox ItemsSource="{Binding ServerProfile.WorkshopIds}" SelectedItem="{Binding SelectedWorkshopId}" Grid.Row="0" >
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding}" />
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <Border Padding="10" Grid.Row="1" HorizontalAlignment="Stretch">
+            <Panel HorizontalAlignment="Stretch">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                    <TextBlock Text="Workshop Item ID" VerticalAlignment="Center" Margin="0,0,10,0" />
+                    <NumericUpDown Value="{Binding EnteredWorkshopId}" ShowButtonSpinner="False" Width="150" VerticalAlignment="Center" Margin="0,0,10,0" />
+                    <Button Content="Subscribe" Command="{Binding AddWorkshopIdCommand}" VerticalAlignment="Center" />
+                </StackPanel>
+                <Button Content="Delete" Command="{Binding RemoveWorkshopIdCommand}" VerticalAlignment="Center" HorizontalAlignment="Right" />
+            </Panel>
+        </Border>
+    </Grid>
+</UserControl>
