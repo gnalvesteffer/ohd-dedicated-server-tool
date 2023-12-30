@@ -1,4 +1,5 @@
 ﻿using DedicatedServerTool.Avalonia.Models;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
@@ -10,6 +11,10 @@ internal static class ServerUtility
     {
         var queryParameters = new StringBuilder();
         queryParameters.Append($"?game={profile.GameModePath.Trim()}");
+        if (profile.MinPlayers.HasValue)
+        {
+            queryParameters.Append($"?MinPlayers={profile.MinPlayers}");
+        }
         if (profile.MaxPlayers.HasValue)
         {
             queryParameters.Append($"?MaxPlayers={profile.MaxPlayers}");
@@ -38,10 +43,20 @@ internal static class ServerUtility
         {
             queryParameters.Append($"?OpforFaction={profile.OpforFactionName.Trim()}");
         }
-        if (profile.DisableKitRestrictions)
+        if (profile.ShouldDisableKitRestrictions)
         {
-            queryParameters.Append($"?DisableKitRestrictions={profile.OpforFactionName.Trim()}");
+            queryParameters.Append($"?DisableKitRestrictions");
         }
+        if (profile.IsBotAutoFillEnabled)
+        {
+            queryParameters.Append($"?BotAutofill");
+        }
+        if (profile.TeamIdToAutoAssignHumans.HasValue)
+        {
+            queryParameters.Append($"?AutoAssignHuman={profile.TeamIdToAutoAssignHumans}");
+        }
+
+        WriteIniAndConfigFiles(profile);
 
         ProcessStartInfo startInfo = new ProcessStartInfo
         {
@@ -56,5 +71,40 @@ internal static class ServerUtility
 
         using Process process = new Process { StartInfo = startInfo };
         process.Start();
+    }
+
+    private static void WriteIniAndConfigFiles(ServerProfile profile)
+    {
+        WriteGameIni(profile);
+        WriteEngineIni(profile);
+        WriteMapCycleConfig(profile);
+    }
+
+    private static void WriteGameIni(ServerProfile profile)
+    {
+        var gameIniPath = Path.Combine(profile.InstallDirectory, @"HarshDoorstop\Saved\Config\WindowsServer\Game.ini");
+
+        var gameIniContents = new StringBuilder();
+
+        File.WriteAllText(gameIniPath, gameIniContents.ToString());
+    }
+
+    private static void WriteEngineIni(ServerProfile profile)
+    {
+        var engineIniPath = Path.Combine(profile.InstallDirectory, @"HarshDoorstop\Saved\Config\WindowsServer\Engine.ini");
+
+        var engineIniContents = new StringBuilder();
+        engineIniContents.AppendLine("[SystemSettings]");
+        engineIniContents.AppendLine($"Game.FriendlyFire={Convert.ToInt32(profile.IsFriendlyFireEnabled)}");
+        engineIniContents.AppendLine($"HD.Game.MinRespawnDelayOverride={profile.RespawnDurationSeconds}");
+        engineIniContents.AppendLine($"HD.Game.DisableKitRestrictionsOverride={Convert.ToInt32(profile.ShouldDisableKitRestrictions)}");
+
+        File.WriteAllText(engineIniPath, engineIniContents.ToString());
+    }
+
+    private static void WriteMapCycleConfig(ServerProfile profile)
+    {
+        var mapCycleConfigPath = Path.Combine(profile.InstallDirectory, @"HarshDoorstop\Saved\Config\WindowsServer\MapCycle.cfg");
+        File.WriteAllText(mapCycleConfigPath, profile.MapCycleText.Trim());
     }
 }

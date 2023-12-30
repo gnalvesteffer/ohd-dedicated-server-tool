@@ -1,4 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace DedicatedServerTool.Avalonia.Models;
 public class ServerProfile : ObservableObject
@@ -36,6 +38,13 @@ public class ServerProfile : ObservableObject
     {
         get => _gameModePath;
         set => SetProperty(ref _gameModePath, value);
+    }
+
+    private int? _minPlayers;
+    public int? MinPlayers
+    {
+        get => _minPlayers;
+        set => SetProperty(ref _minPlayers, value);
     }
 
     private int? _maxPlayers;
@@ -140,10 +149,45 @@ public class ServerProfile : ObservableObject
         set => SetProperty(ref _serverPassword, value);
     }
 
-    private bool _disableKitRestrictions;
-    public bool DisableKitRestrictions
+    private int? _teamIdToAutoAssignHumans;
+    public int? TeamIdToAutoAssignHumans
     {
-        get => _disableKitRestrictions;
-        set => SetProperty(ref _disableKitRestrictions, value);
+        get => _teamIdToAutoAssignHumans;
+        set => SetProperty(ref _teamIdToAutoAssignHumans, value);
+    }
+
+    private bool _isBotAutoFillEnabled;
+    public bool IsBotAutoFillEnabled
+    {
+        get => _isBotAutoFillEnabled;
+        set => SetProperty(ref _isBotAutoFillEnabled, value);
+    }
+
+    private bool _shouldDisableKitRestrictions;
+    public bool ShouldDisableKitRestrictions
+    {
+        get => _shouldDisableKitRestrictions;
+        set => SetProperty(ref _shouldDisableKitRestrictions, value);
+    }
+
+    private string _mapCycleText = string.Empty;
+    public string MapCycleText
+    {
+        get => _mapCycleText;
+        set => SetProperty(ref _mapCycleText, value);
+    }
+
+    private int? _respawnDurationSeconds;
+    public int? RespawnDurationSeconds
+    {
+        get => _respawnDurationSeconds;
+        set => SetProperty(ref _respawnDurationSeconds, value);
+    }
+
+    private bool _isFriendlyFireEnabled;
+    public bool IsFriendlyFireEnabled
+    {
+        get => _isFriendlyFireEnabled;
+        set => SetProperty(ref _isFriendlyFireEnabled, value);
     }
 }

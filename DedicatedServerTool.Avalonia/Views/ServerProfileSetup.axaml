@@ -16,7 +16,10 @@
                 <ScrollViewer>
                     <StackPanel>
                         <StackPanel Classes="form-group">
-                            <TextBlock Text="Install Directory" />
+                            <WrapPanel>
+                                <TextBlock Text="Install Directory" />
+                                <TextBlock Classes="attention" Text="*" />
+                            </WrapPanel>
                             <TextBlock Classes="info" Text="Select the location to install the server files. You may also select an existing installation to add it to the launcher." />
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -42,7 +45,10 @@
                     <StackPanel>
                         <WrapPanel Classes="form-group">
                             <StackPanel Classes="form-group" Width="400" Margin="0,0,10,0" VerticalAlignment="Bottom">
-                                <TextBlock Text="Server Name" />
+                                <WrapPanel>
+                                    <TextBlock Text="Server Name" />
+                                    <TextBlock Classes="attention" Text="*" />
+                                </WrapPanel>
                                 <TextBox Text="{Binding ServerProfile.ServerName}" />
                             </StackPanel>
                             <StackPanel Classes="form-group" Width="300" Margin="0,0,10,0" VerticalAlignment="Bottom">
@@ -56,19 +62,31 @@
                             <TextBlock Classes="info" Text="Ensure that your router is configured to forward these ports to your system." />
                             <WrapPanel Classes="form-group">
                                 <StackPanel Width="200" Margin="0,0,10,0">
-                                    <TextBlock Text="Game" />
+                                    <WrapPanel>
+                                        <TextBlock Text="Game" />
+                                        <TextBlock Classes="attention" Text="*" />
+                                    </WrapPanel>
                                     <NumericUpDown Value="{Binding ServerProfile.Port}" Minimum="0" Maximum="65535" Increment="1" FormatString="0" />
                                 </StackPanel>
                                 <StackPanel Width="200" Margin="0,0,10,0">
-                                    <TextBlock Text="Steam Client" />
+                                    <WrapPanel>
+                                        <TextBlock Text="Steam Client" />
+                                        <TextBlock Classes="attention" Text="*" />
+                                    </WrapPanel>
                                     <TextBox Text="{Binding ServerProfile.ClientPort}" IsEnabled="False" IsReadOnly="True" />
                                 </StackPanel>
                                 <StackPanel Width="200" Margin="0,0,10,0">
-                                    <TextBlock Text="Steam Query" />
+                                    <WrapPanel>
+                                        <TextBlock Text="Steam Query" />
+                                        <TextBlock Classes="attention" Text="*" />
+                                    </WrapPanel>
                                     <NumericUpDown Value="{Binding ServerProfile.QueryPort}" Minimum="0" Maximum="65535" Increment="1" FormatString="0" />
                                 </StackPanel>
                                 <StackPanel Width="200" Margin="0,0,10,0">
-                                    <TextBlock Text="RCON" />
+                                    <WrapPanel>
+                                        <TextBlock Text="RCON" />
+                                        <TextBlock Classes="attention" Text="*" />
+                                    </WrapPanel>
                                     <NumericUpDown Value="{Binding ServerProfile.RconPort}" Minimum="0" Maximum="65535" Increment="1" FormatString="0" />
                                 </StackPanel>
                             </WrapPanel>
@@ -86,12 +104,18 @@
                         </StackPanel>
                         <WrapPanel Classes="form-group">
                             <StackPanel Classes="form-group" Width="300" Margin="0,0,10,0" VerticalAlignment="Bottom">
-                                <TextBlock Text="Initial Map" />
+                                <WrapPanel>
+                                    <TextBlock Text="Initial Map" />
+                                    <TextBlock Classes="attention" Text="*" />
+                                </WrapPanel>
                                 <TextBlock Classes="info" TextWrapping="Wrap" Text="This will be the map that gets loaded when the server starts. For mod maps, consult their respective workshop pages for the name to use." />
                                 <TextBox Text="{Binding ServerProfile.InitialMapName}" />
                             </StackPanel>
                             <StackPanel Classes="form-group" Width="300" Margin="0,0,10,0" VerticalAlignment="Bottom">
-                                <TextBlock Text="Gamemode" />
+                                <WrapPanel>
+                                    <TextBlock Text="Gamemode" />
+                                    <TextBlock Classes="attention" Text="*" />
+                                </WrapPanel>
                                 <TextBlock Classes="info" TextWrapping="Wrap" Text="The path of the gamemode class. For mod gamemodes, consult their respective workshop pages for the path to use." />
                                 <TextBox Text="{Binding ServerProfile.GameModePath}" />
                             </StackPanel>
@@ -109,36 +133,69 @@
                             </StackPanel>
                         </WrapPanel>
                         <WrapPanel Classes="form-group">
-                            <StackPanel Classes="form-group"  Width="125" Margin="0,10,10,0" VerticalAlignment="Bottom">
-                                <TextBlock Text="Max Players" />
+                            <StackPanel Classes="form-group" Width="125" Margin="0,10,10,0" VerticalAlignment="Bottom">
+                                <TextBlock Text="Min Players" />
+                                <TextBlock Classes="info" TextWrapping="Wrap" Text="The minimum number of players required to start the match." />
+                                <NumericUpDown Value="{Binding ServerProfile.MinPlayers}" Minimum="1" Maximum="256" Increment="1" FormatString="0" />
+                            </StackPanel>
+                            <StackPanel Classes="form-group" Width="125" Margin="0,10,10,0" VerticalAlignment="Bottom">
+                                <WrapPanel>
+                                    <TextBlock Text="Max Players" />
+                                    <TextBlock Classes="attention" Text="*" />
+                                </WrapPanel>
+                                <TextBlock Classes="info" TextWrapping="Wrap" Text="The maximum number of players allowed to be on the server." />
                                 <NumericUpDown Value="{Binding ServerProfile.MaxPlayers}" Minimum="1" Maximum="256" Increment="1" FormatString="0" />
                             </StackPanel>
-                            <StackPanel Classes="form-group"  Width="125" Margin="0,10,10,0" VerticalAlignment="Bottom">
+                            <StackPanel Classes="form-group" Width="175" Margin="0,10,10,0" VerticalAlignment="Bottom">
+                                <TextBlock Text="Human Team ID" />
+                                <TextBlock Classes="info" TextWrapping="Wrap" Text="Forces players to be on a specific team, allowing for co-op gameplay (players vs bots). Leave blank to allow players to join any team." />
+                                <NumericUpDown Value="{Binding ServerProfile.TeamIdToAutoAssignHumans}" Minimum="0" Maximum="254" Increment="1" FormatString="0" />
+                            </StackPanel>
+                            <StackPanel Classes="form-group" Width="175" Margin="0,10,10,0" VerticalAlignment="Bottom">
+                                <TextBlock Text="Respawn Time" />
+                                <TextBlock Classes="info" TextWrapping="Wrap" Text="The number of seconds players must wait to respawn. Leave blank to use the default value of the map/gamemode." />
+                                <NumericUpDown Value="{Binding ServerProfile.RespawnDurationSeconds}" Minimum="0" Maximum="999999" Increment="1" FormatString="0" />
+                            </StackPanel>
+                        </WrapPanel>
+                        <WrapPanel Classes="form-group">
+
+                            <StackPanel Classes="form-group" Width="125" Margin="0,10,10,0" VerticalAlignment="Bottom">
                                 <TextBlock Text="Blufor Bots" />
                                 <NumericUpDown Value="{Binding ServerProfile.BluforBotCount}" Minimum="0" Maximum="256" Increment="1" FormatString="0" />
                             </StackPanel>
-                            <StackPanel Classes="form-group"  Width="125" Margin="0,10,10,0" VerticalAlignment="Bottom">
+                            <StackPanel Classes="form-group" Width="125" Margin="0,10,10,0" VerticalAlignment="Bottom">
                                 <TextBlock Text="Opfor Bots" />
                                 <NumericUpDown Value="{Binding ServerProfile.OpforBotCount}" Minimum="0" Maximum="256" Increment="1" FormatString="0" />
                             </StackPanel>
                         </WrapPanel>
                         <WrapPanel Classes="form-group">
-                            <StackPanel Classes="form-group"  Width="175" Margin="0,10,10,0" VerticalAlignment="Bottom">
+                            <StackPanel Classes="form-group" Width="175" Margin="0,10,10,0" VerticalAlignment="Bottom">
                                 <TextBlock Text="Blufor Tickets" />
                                 <TextBlock Classes="info" TextWrapping="Wrap" Text="Leave blank to use the default provided by the map/gamemode." />
                                 <NumericUpDown Value="{Binding ServerProfile.BluforTickets}" Minimum="0" Maximum="9999999" Increment="1" FormatString="0" />
                             </StackPanel>
-                            <StackPanel Classes="form-group"  Width="175" Margin="0,10,10,0" VerticalAlignment="Bottom">
+                            <StackPanel Classes="form-group" Width="175" Margin="0,10,10,0" VerticalAlignment="Bottom">
                                 <TextBlock Text="Opfor Tickets" />
                                 <TextBlock Classes="info" TextWrapping="Wrap" Text="Leave blank to use the default provided by the map/gamemode." />
                                 <NumericUpDown Value="{Binding ServerProfile.OpforTickets}" Minimum="0" Maximum="9999999" Increment="1" FormatString="0" />
                             </StackPanel>
                         </WrapPanel>
                         <WrapPanel Classes="form-group">
-                            <StackPanel Classes="form-group"  Width="175" Margin="0,10,10,0" VerticalAlignment="Bottom">
-                                <CheckBox Content="Disable Kit Restrictions?" ToolTip.Tip="If checked, will allow players to use any kit regardless of squad size and other requirements." />
+                            <StackPanel Classes="form-group" Margin="0,10,10,0" VerticalAlignment="Bottom">
+                                <CheckBox Content="Disable Kit Restrictions" ToolTip.Tip="If checked, will allow players to use any kit regardless of squad size and other requirements." IsChecked="{Binding ServerProfile.ShouldDisableKitRestrictions}" />
+                            </StackPanel>
+                            <StackPanel Classes="form-group" Margin="0,10,10,0" VerticalAlignment="Bottom">
+                                <CheckBox Content="Enable Friendly Fire" ToolTip.Tip="If checked, will allow team members to damage each other." IsChecked="{Binding ServerProfile.IsFriendlyFireEnabled}" />
+                            </StackPanel>
+                            <StackPanel Classes="form-group" Margin="0,10,10,0" VerticalAlignment="Bottom">
+                                <CheckBox Content="Autofill Bots" ToolTip.Tip="Enables bot-autofill feature." IsChecked="{Binding ServerProfile.IsBotAutoFillEnabled}" />
                             </StackPanel>
                         </WrapPanel>
+                        <StackPanel Classes="form-group">
+                            <TextBlock Text="Map Cycle" />
+                            <TextBlock Classes="info" TextWrapping="Wrap" Text="The maps to run on the server, which will progress in the order listed. Write each map name on a new line." />
+                            <TextBox Text="{Binding ServerProfile.MapCycleText}" AcceptsReturn="True" Height="200" />
+                        </StackPanel>
                     </StackPanel>
                 </ScrollViewer>
             </TabItem>

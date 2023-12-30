@@ -6,9 +6,9 @@
         xmlns:local="using:DedicatedServerTool.Avalonia.Views"
         x:Class="DedicatedServerTool.Avalonia.Views.MainWindow"
         x:DataType="vm:AppViewModel"
-        mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="512"
-        Width="1200"
-        Height="512"
+        mc:Ignorable="d" d:DesignWidth="1024" d:DesignHeight="768"
+        Width="1024"
+        Height="768"
         Icon="/Assets/ohd.ico"
         Title="OHD Dedicated Server Tool">
 
