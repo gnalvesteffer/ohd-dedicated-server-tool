@@ -37,5 +37,6 @@ jobs:
       uses: softprops/action-gh-release@v1
       with:
         token: ${{ github.token }}
+        tag_name: ${{ github.ref }}
         name: "OHD Dedicated Server Tool"
         files: artifacts/*
