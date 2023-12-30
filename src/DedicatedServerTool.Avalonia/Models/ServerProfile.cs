@@ -199,6 +199,13 @@ public class ServerProfile : ObservableObject
         set => SetProperty(ref _isAutoBalanceEnabled, value);
     }
 
+    private string _adminSteamIdsText = string.Empty;
+    public string AdminSteamIdsText
+    {
+        get => _adminSteamIdsText;
+        set => SetProperty(ref _adminSteamIdsText, value);
+    }
+
     public IEnumerable<long> GetInstalledWorkshopIds()
     {
         return InstalledWorkshopModUtility.GetInstalledWorkshopIds(InstallDirectory);

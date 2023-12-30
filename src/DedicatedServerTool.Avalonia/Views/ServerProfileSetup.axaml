@@ -95,6 +95,17 @@
                     </StackPanel>
                 </ScrollViewer>
             </TabItem>
+            <TabItem Header="Admin">
+                <ScrollViewer>
+                    <StackPanel>
+                        <StackPanel Classes="form-group">
+                            <TextBlock Text="Admins" />
+                            <TextBlock Classes="info" TextWrapping="Wrap" Text="Enter the SteamID64 of each player that you want to have admin privileges, placing each SteamID64 on a new line in the textbox below." />
+                            <TextBox Text="{Binding ServerProfile.AdminSteamIdsText}" AcceptsReturn="True" Height="200" />
+                        </StackPanel>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
             <TabItem Header="Configuration">
                 <ScrollViewer>
                     <StackPanel>

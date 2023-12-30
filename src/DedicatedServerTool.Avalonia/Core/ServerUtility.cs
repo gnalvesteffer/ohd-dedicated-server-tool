@@ -82,6 +82,7 @@ internal static class ServerUtility
         WriteGameIni(profile);
         WriteEngineIni(profile);
         WriteMapCycleConfig(profile);
+        WriteAdminConfig(profile);
     }
 
     private static void WriteGameIni(ServerProfile profile)
@@ -112,6 +113,13 @@ internal static class ServerUtility
         var mapCycleConfigPath = Path.Combine(profile.InstallDirectory, @"HarshDoorstop\Saved\Config\WindowsServer\MapCycle.cfg");
         Directory.CreateDirectory(Path.GetDirectoryName(mapCycleConfigPath)!);
         File.WriteAllText(mapCycleConfigPath, profile.MapCycleText.Trim());
+    }
+
+    private static void WriteAdminConfig(ServerProfile profile)
+    {
+        var adminsConfigPath = Path.Combine(profile.InstallDirectory, @"HarshDoorstop\Saved\Config\WindowsServer\Admins.cfg");
+        Directory.CreateDirectory(Path.GetDirectoryName(adminsConfigPath)!);
+        File.WriteAllText(adminsConfigPath, profile.AdminSteamIdsText.Trim());
     }
 
 }
