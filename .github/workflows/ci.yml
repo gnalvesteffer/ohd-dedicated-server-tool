@@ -20,9 +20,8 @@ jobs:
 
     - name: Build and Publish
       run: |
-        cd src/DedicatedServerTool.Avalonia
+        cd src/
         dotnet publish -r win-x64 -c Release --self-contained
-        cd bin/x64/Release/net6.0-windows/win-x64/publish
 
     - name: Create Release
       id: create_release
@@ -30,9 +29,6 @@ jobs:
       with:
         tag_name: ${{ github.ref }}
         release_name: Release ${{ github.ref }}
-        body: |
-          Changes in this release:
-          - Describe your changes here
 
     - name: Upload Artifacts
       uses: actions/upload-artifact@v2
