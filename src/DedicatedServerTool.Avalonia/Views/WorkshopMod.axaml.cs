@@ -34,7 +34,13 @@ public partial class WorkshopMod : UserControl
         base.OnLoaded(e);
         if (Tag is ServerProfileSetupViewModel serverProfileSetupViewModel && DataContext is not WorkshopModViewModel)
         {
-            DataContext = new WorkshopModViewModel(serverProfileSetupViewModel.ServerProfile, WorkshopId);
+            var viewModel = new WorkshopModViewModel(
+                serverProfileSetupViewModel.ServerProfile,
+                WorkshopId,
+                _ => serverProfileSetupViewModel.RefreshInstalledMods.Execute(null)
+            );
+            viewModel.LoadWorkshopCoverImageCommand.Execute(null);
+            DataContext = viewModel;
         }
     }
 }

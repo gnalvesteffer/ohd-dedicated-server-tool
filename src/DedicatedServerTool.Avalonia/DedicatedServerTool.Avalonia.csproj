@@ -7,7 +7,7 @@
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
         <ApplicationIcon>Assets\ohd.ico</ApplicationIcon>
-        <Version>0.2.0</Version>
+        <Version>0.3.0</Version>
         <PublishTrimmed>true</PublishTrimmed>
         <Platforms>x64</Platforms>
     </PropertyGroup>
@@ -29,6 +29,7 @@
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
         <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.6" />
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
+        <PackageReference Include="HtmlAgilityPack" Version="1.11.57" />
     </ItemGroup>
 
     <ItemGroup>

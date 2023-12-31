@@ -212,9 +212,7 @@
                 </ScrollViewer>
             </TabItem>
             <TabItem Header="Mods">
-                <ScrollViewer>
-                    <local:WorkshopModList DataContext="{Binding}" />
-                </ScrollViewer>
+                <local:WorkshopModList DataContext="{Binding}" />
             </TabItem>
         </TabControl>
         <Grid Grid.Row="1">

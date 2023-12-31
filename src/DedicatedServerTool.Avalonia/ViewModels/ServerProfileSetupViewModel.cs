@@ -80,6 +80,7 @@ public class ServerProfileSetupViewModel : ObservableObject
     public ICommand OpenAssetScannerCommand { get; }
     public ICommand AddWorkshopIdCommand { get; }
     public ICommand RemoveWorkshopIdCommand { get; }
+    public ICommand RefreshInstalledMods { get; }
 
     public ServerProfileSetupViewModel(ServerProfile serverProfile, ICommand onDiscardServerProfile)
     {
@@ -91,7 +92,7 @@ public class ServerProfileSetupViewModel : ObservableObject
         DownloadServerFilesCommand = new AsyncRelayCommand(DownloadOrUpdateServerFilesAsync);
         OpenAssetScannerCommand = new RelayCommand(OpenAssetScanner);
         AddWorkshopIdCommand = new AsyncRelayCommand(AddWorkshopIdAsync);
-        RemoveWorkshopIdCommand = new AsyncRelayCommand(RemoveWorkshopIdAsync);
+        RefreshInstalledMods = new RelayCommand(RehydrateInstalledWorkshopIds);
         UpdateServerFileProperties();
         RehydrateInstalledWorkshopIds();
     }
@@ -192,17 +193,6 @@ public class ServerProfileSetupViewModel : ObservableObject
         RehydrateInstalledWorkshopIds();
     }
 
-    private async Task RemoveWorkshopIdAsync()
-    {
-        if (!SelectedWorkshopId.HasValue)
-        {
-            return;
-        }
-
-        var workshopId = SelectedWorkshopId.Value;
-        await SteamCmdUtility.UnsubscribeFromModAsync(ServerProfile.InstallDirectory, workshopId);
-        RehydrateInstalledWorkshopIds();
-    }
     private void RehydrateInstalledWorkshopIds()
     {
         InstalledWorkshopIds = new(ServerProfile.GetInstalledWorkshopIds());
