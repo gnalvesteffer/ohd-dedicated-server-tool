@@ -110,16 +110,22 @@ internal static class ServerUtility
 
     private static void WriteMapCycleConfig(ServerProfile profile)
     {
+        var stringBuilder = new StringBuilder(profile.MapCycleText.Trim());
+        stringBuilder.AppendLine(); // Blank line to "finalize" the file
+
         var mapCycleConfigPath = Path.Combine(profile.InstallDirectory, @"HarshDoorstop\Saved\Config\WindowsServer\MapCycle.cfg");
         Directory.CreateDirectory(Path.GetDirectoryName(mapCycleConfigPath)!);
-        File.WriteAllText(mapCycleConfigPath, profile.MapCycleText.Trim());
+        File.WriteAllText(mapCycleConfigPath, stringBuilder.ToString());
     }
 
     private static void WriteAdminConfig(ServerProfile profile)
     {
+        var stringBuilder = new StringBuilder(profile.AdminSteamIdsText.Trim());
+        stringBuilder.AppendLine(); // Blank line to "finalize" the file
+
         var adminsConfigPath = Path.Combine(profile.InstallDirectory, @"HarshDoorstop\Saved\Config\WindowsServer\Admins.cfg");
         Directory.CreateDirectory(Path.GetDirectoryName(adminsConfigPath)!);
-        File.WriteAllText(adminsConfigPath, profile.AdminSteamIdsText.Trim());
+        File.WriteAllText(adminsConfigPath, stringBuilder.ToString());
     }
 
 }

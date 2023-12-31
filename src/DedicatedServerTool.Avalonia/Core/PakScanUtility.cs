@@ -45,6 +45,7 @@ internal static class PakScanUtility
                     var currentText = new string(buffer, 0, bytesRead);
 
                     tasks.Add(ProcessChunkAsync(currentText, mapNames, cancellationToken));
+                    await Task.Delay(10);
                 }
 
                 await Task.WhenAll(tasks);
