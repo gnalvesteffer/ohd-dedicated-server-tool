@@ -28,6 +28,7 @@
                             <TextBlock Classes="form-group-header" Text="Startup Options" />
                             <CheckBox Content="Update server files and mods before starting" IsChecked="{Binding ServerProfile.ShouldUpdateBeforeStarting}" ToolTip.Tip="Automatically updates the server files and mods before starting the server. Same behavior as pressing the Update Server button before starting the server." />
                             <CheckBox Content="Restart server on crash" IsChecked="{Binding ServerProfile.ShouldRestartOnCrash}" ToolTip.Tip="Automatically restarts the server if it crashes. This can be toggled while the server is running, and take effect." />
+                            <CheckBox Content="Auto-configure Port Forwarding via uPnP" IsChecked="{Binding ServerProfile.ShouldUseUpnpForPortForwarding}" ToolTip.Tip="When enabled, attempts to automatically configure port forwarding via uPnP when the server starts, and cleans them up when the server stops. (Only available on supported routers)" />
                         </StackPanel>
                     </StackPanel>
                 </Border>

@@ -77,7 +77,6 @@ public class ServerProfileSetupViewModel : ObservableObject
     public ICommand DownloadServerFilesCommand { get; }
     public ICommand OpenAssetScannerCommand { get; }
     public ICommand AddWorkshopIdCommand { get; }
-    public ICommand RemoveWorkshopIdCommand { get; }
     public ICommand RefreshInstalledMods { get; }
 
     public ServerProfileSetupViewModel(ServerProfile serverProfile, ICommand onDiscardServerProfile)
@@ -93,6 +92,7 @@ public class ServerProfileSetupViewModel : ObservableObject
         RefreshInstalledMods = new RelayCommand(RehydrateInstalledWorkshopIds);
         UpdateServerFileProperties();
         RehydrateInstalledWorkshopIds();
+        UpdateCanSave();
     }
 
     private void _serverProfile_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)

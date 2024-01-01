@@ -108,35 +108,35 @@ public class ServerProfile : ObservableObject
         set => SetProperty(ref _opforFactionName, value);
     }
 
-    private int? _port;
-    public int? Port
+    private ushort? _port;
+    public ushort? Port
     {
         get => _port;
         set
         {
             if (SetProperty(ref _port, value))
             {
-                ClientPort = value.HasValue ? value + 1 : null;
+                ClientPort = (ushort?)(value.HasValue ? value + 1 : null);
             }
         }
     }
 
-    private int? _clientPort;
-    public int? ClientPort
+    private ushort? _clientPort;
+    public ushort? ClientPort
     {
         get => _clientPort;
         set => SetProperty(ref _clientPort, value);
     }
 
-    private int? _queryPort;
-    public int? QueryPort
+    private ushort? _queryPort;
+    public ushort? QueryPort
     {
         get => _queryPort;
         set => SetProperty(ref _queryPort, value);
     }
 
-    private int? _rconPort;
-    public int? RconPort
+    private ushort? _rconPort;
+    public ushort? RconPort
     {
         get => _rconPort;
         set => SetProperty(ref _rconPort, value);
@@ -217,6 +217,13 @@ public class ServerProfile : ObservableObject
     {
         get => _shouldRestartOnCrash;
         set => SetProperty(ref _shouldRestartOnCrash, value);
+    }
+
+    private bool _shouldUseUpnpForPortForwarding;
+    public bool ShouldUseUpnpForPortForwarding
+    {
+        get => _shouldUseUpnpForPortForwarding;
+        set => SetProperty(ref _shouldUseUpnpForPortForwarding, value);
     }
 
     public IEnumerable<long> GetInstalledWorkshopIds()

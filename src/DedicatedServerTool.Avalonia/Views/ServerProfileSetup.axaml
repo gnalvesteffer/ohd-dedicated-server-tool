@@ -91,6 +91,9 @@
                                     <NumericUpDown Value="{Binding ServerProfile.RconPort}" Minimum="0" Maximum="65535" Increment="1" FormatString="0" />
                                 </StackPanel>
                             </WrapPanel>
+                            <WrapPanel>
+                                <CheckBox Content="Auto-configure Port Forwarding via uPnP" IsChecked="{Binding ServerProfile.ShouldUseUpnpForPortForwarding}" ToolTip.Tip="When enabled, attempts to automatically configure port forwarding via uPnP when the server starts, and cleans them up when the server stops. (Only available on supported routers)" />
+                            </WrapPanel>
                         </StackPanel>
                     </StackPanel>
                 </ScrollViewer>

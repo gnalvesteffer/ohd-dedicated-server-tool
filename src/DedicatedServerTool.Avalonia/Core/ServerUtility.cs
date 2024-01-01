@@ -1,4 +1,6 @@
 ﻿using DedicatedServerTool.Avalonia.Models;
+using DedicatedServerTool.Avalonia.Views;
+using Open.Nat;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -13,6 +15,11 @@ internal static class ServerUtility
 
     public static async Task StartServerAsync(ServerProfile profile)
     {
+        if (!profile.Port.HasValue || !profile.ClientPort.HasValue || !profile.QueryPort.HasValue || !profile.RconPort.HasValue)
+        {
+            throw new InvalidOperationException("Unable to start server due to undefined port configurations.");
+        }
+
         var queryParameters = new StringBuilder();
         queryParameters.Append($"?game={profile.GameModePath.Trim()}");
         if (!string.IsNullOrWhiteSpace(profile.ServerPassword))
@@ -70,19 +77,41 @@ internal static class ServerUtility
         {
             WorkingDirectory = profile.InstallDirectory,
             FileName = Path.Combine(profile.InstallDirectory, @"HarshDoorstop\Binaries\Win64\HarshDoorstopServer-Win64-Shipping.exe"),
-            Arguments = $"{profile.InitialMapName}{queryParameters} -log -Port={profile.Port} -QueryPort={profile.QueryPort} -SteamServerName=\"{profile.ServerName}\" %*"
+            Arguments = $"{profile.InitialMapName}{queryParameters} -log -Port={profile.Port} -QueryPort={profile.QueryPort} -RCONPort={profile.RconPort} -SteamServerName=\"{profile.ServerName}\" %*"
         };
 
-        do
+        var useUpnpForPortForwarding = profile.ShouldUseUpnpForPortForwarding;
+        var portForwardManager = new PortForwardManager();
+        try
         {
-            using Process process = new Process { StartInfo = startInfo };
-            process.Start();
-            await process.WaitForExitAsync();
-            if (CleanExitCodes.Contains(process.ExitCode))
+            if (useUpnpForPortForwarding)
             {
-                break;
+                await portForwardManager.OpenPortsAsync(profile.Port.Value, profile.ClientPort.Value, profile.QueryPort.Value, profile.RconPort.Value);
             }
-        } while (profile.ShouldRestartOnCrash);
+
+            do
+            {
+                using Process process = new Process { StartInfo = startInfo };
+                process.Start();
+                await process.WaitForExitAsync();
+                if (CleanExitCodes.Contains(process.ExitCode))
+                {
+                    break;
+                }
+            } while (profile.ShouldRestartOnCrash);
+        }
+        catch (MappingException exception)
+        {
+            new MessageBoxWindow("Failed to start server", $"Failed to configure port forwarding via uPnP. Try again or ensure that the server's ports aren't already reserved. Details: {exception.Message}").Show();
+        }
+        catch (Exception exception)
+        {
+            new MessageBoxWindow("Failed to start server", exception.Message).Show();
+        }
+        finally
+        {
+            await portForwardManager.ClosePortsAsync();
+        }
     }
 
     private static void WriteIniAndConfigFiles(ServerProfile profile)
