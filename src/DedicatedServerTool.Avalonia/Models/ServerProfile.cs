@@ -206,6 +206,13 @@ public class ServerProfile : ObservableObject
         set => SetProperty(ref _adminSteamIdsText, value);
     }
 
+    private bool _shouldUpdateBeforeStarting;
+    public bool ShouldUpdateBeforeStarting
+    {
+        get => _shouldUpdateBeforeStarting;
+        set => SetProperty(ref _shouldUpdateBeforeStarting, value);
+    }
+
     public IEnumerable<long> GetInstalledWorkshopIds()
     {
         return InstalledWorkshopModUtility.GetInstalledWorkshopIds(InstallDirectory);

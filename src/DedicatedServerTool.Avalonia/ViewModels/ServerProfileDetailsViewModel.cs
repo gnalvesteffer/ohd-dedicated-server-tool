@@ -30,7 +30,7 @@ public class ServerProfileDetailsViewModel : ObservableObject
         OpenInstallDirectoryCommand = new RelayCommand(OpenInstallDirectory);
         EditServerProfileCommand = new RelayCommand(EditServerProfile);
         UpdateServerAndModsCommand = new AsyncRelayCommand(UpdateServerAndModsAsync);
-        StartServerCommand = new RelayCommand(StartServer);
+        StartServerCommand = new AsyncRelayCommand(StartServerAsync);
     }
 
     private void OpenInstallDirectory()
@@ -62,8 +62,12 @@ public class ServerProfileDetailsViewModel : ObservableObject
         return Task.WhenAll(updateServerTask, updateModsTask);
     }
 
-    private void StartServer()
+    private async Task StartServerAsync()
     {
+        if (ServerProfile.ShouldUpdateBeforeStarting)
+        {
+            await UpdateServerAndModsAsync();
+        }
         ServerUtility.StartServer(ServerProfile);
     }
 
