@@ -1,6 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DedicatedServerTool.Avalonia.Models;
+using DedicatedServerTool.Avalonia.Views;
+using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
@@ -12,6 +14,8 @@ namespace DedicatedServerTool.Avalonia.ViewModels
 {
     public class PakScanViewModel : ObservableObject
     {
+        private const string ModDirectory = "HarshDoorstop/Mods";
+        private const string VanillaDirectory = "HarshDoorstop/Content/Paks";
         private readonly ServerProfile _profile;
         private CancellationTokenSource _cancellationTokenSource = new();
 
@@ -45,6 +49,10 @@ namespace DedicatedServerTool.Avalonia.ViewModels
 
         public ICommand FindModMapsCommand { get; }
         public ICommand FindVanillaMapsCommand { get; }
+        public ICommand FindModGameModesCommand { get; }
+        public ICommand FindVanillaGameModesCommand { get; }
+        public ICommand FindModFactionsCommand { get; }
+        public ICommand FindVanillaFactionsCommand { get; }
         public ICommand CancelScanCommand { get; }
 
         public PakScanViewModel(ServerProfile profile)
@@ -52,6 +60,10 @@ namespace DedicatedServerTool.Avalonia.ViewModels
             _profile = profile;
             FindModMapsCommand = new AsyncRelayCommand(FindModMapsAsync);
             FindVanillaMapsCommand = new AsyncRelayCommand(FindVanillaMapsAsync);
+            FindModGameModesCommand = new AsyncRelayCommand(FindModGameModesAsync);
+            FindVanillaGameModesCommand = new AsyncRelayCommand(FindVanillaGameModesAsync);
+            FindModFactionsCommand = new AsyncRelayCommand(FindModFactionsAsync);
+            FindVanillaFactionsCommand = new AsyncRelayCommand(FindVanillaFactionsAsync);
             CancelScanCommand = new RelayCommand(CancelScan);
         }
 
@@ -66,12 +78,32 @@ namespace DedicatedServerTool.Avalonia.ViewModels
 
         private Task FindModMapsAsync()
         {
-            return FindMapsAsync("HarshDoorstop/Mods");
+            return FindMapsAsync(ModDirectory);
         }
 
         private Task FindVanillaMapsAsync()
         {
-            return FindMapsAsync("HarshDoorstop/Content/Paks");
+            return FindMapsAsync(VanillaDirectory);
+        }
+
+        private Task FindModGameModesAsync()
+        {
+            return FindGameModesAsync(ModDirectory);
+        }
+
+        private Task FindVanillaGameModesAsync()
+        {
+            return FindGameModesAsync(VanillaDirectory);
+        }
+
+        private Task FindModFactionsAsync()
+        {
+            return FindFactionsAsync(ModDirectory);
+        }
+
+        private Task FindVanillaFactionsAsync()
+        {
+            return FindFactionsAsync(VanillaDirectory);
         }
 
         private async Task FindMapsAsync(string directoryPath)
@@ -102,7 +134,78 @@ namespace DedicatedServerTool.Avalonia.ViewModels
                     _cancellationTokenSource.Token
                 );
             }
-            catch { }
+            catch (Exception exception)
+            {
+                new MessageBoxWindow("Error", exception.Message);
+            }
+        }
+
+        private async Task FindGameModesAsync(string directoryPath)
+        {
+            try
+            {
+                CancelScan();
+                IsLoading = true;
+                var pakFilePaths = Directory.GetFiles(Path.Combine(_profile.InstallDirectory, directoryPath), "*.pak", SearchOption.AllDirectories);
+                TotalPakFiles = pakFilePaths.Count();
+                TotalProcessedPakFiles = 0;
+                Results.Clear();
+
+                await PakScanUtility.FindGameModeNamesInPaksAsync(
+                    pakFilePaths,
+                    (pakFilePath, mapNames) =>
+                    {
+                        if (_cancellationTokenSource.IsCancellationRequested)
+                        {
+                            return;
+                        }
+                        ++TotalProcessedPakFiles;
+                        foreach (var mapName in mapNames)
+                        {
+                            Results.Add(new(Path.GetFileName(pakFilePath), mapName));
+                        }
+                    },
+                    _cancellationTokenSource.Token
+                );
+            }
+            catch (Exception exception)
+            {
+                new MessageBoxWindow("Error", exception.Message);
+            }
+        }
+
+        private async Task FindFactionsAsync(string directoryPath)
+        {
+            try
+            {
+                CancelScan();
+                IsLoading = true;
+                var pakFilePaths = Directory.GetFiles(Path.Combine(_profile.InstallDirectory, directoryPath), "*.pak", SearchOption.AllDirectories);
+                TotalPakFiles = pakFilePaths.Count();
+                TotalProcessedPakFiles = 0;
+                Results.Clear();
+
+                await PakScanUtility.FindFactionNamesInPaksAsync(
+                    pakFilePaths,
+                    (pakFilePath, mapNames) =>
+                    {
+                        if (_cancellationTokenSource.IsCancellationRequested)
+                        {
+                            return;
+                        }
+                        ++TotalProcessedPakFiles;
+                        foreach (var mapName in mapNames)
+                        {
+                            Results.Add(new(Path.GetFileName(pakFilePath), mapName));
+                        }
+                    },
+                    _cancellationTokenSource.Token
+                );
+            }
+            catch (Exception exception)
+            {
+                new MessageBoxWindow("Error", exception.Message);
+            }
         }
     }
 }

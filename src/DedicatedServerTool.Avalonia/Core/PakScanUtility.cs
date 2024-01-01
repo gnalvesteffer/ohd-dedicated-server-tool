@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -12,26 +13,41 @@ internal static class PakScanUtility
 
     public static Task FindMapNamesInPaksAsync(IEnumerable<string> pakFilePaths, OnPakFileProcessed? pakFileProcessedHandler = null, CancellationToken cancellationToken = default)
     {
+        return FindAssetNamesInPaksAsync(pakFilePaths, @"(?<=\/)([^\/]*[^\/]+)(?=\.umap)", pakFileProcessedHandler, cancellationToken);
+    }
+
+    public static Task FindGameModeNamesInPaksAsync(IEnumerable<string> pakFilePaths, OnPakFileProcessed? pakFileProcessedHandler = null, CancellationToken cancellationToken = default)
+    {
+        return FindAssetNamesInPaksAsync(pakFilePaths, @"(?<=\/)([^\/]+Game[^\/]+)(?=\.uasset)", pakFileProcessedHandler, cancellationToken);
+    }
+
+    public static Task FindFactionNamesInPaksAsync(IEnumerable<string> pakFilePaths, OnPakFileProcessed? pakFileProcessedHandler = null, CancellationToken cancellationToken = default)
+    {
+        return FindAssetNamesInPaksAsync(pakFilePaths, @"(?<=\/)([^\/]+Faction[^\/]+)(?=\.uasset)", pakFileProcessedHandler, cancellationToken);
+    }
+
+    private static Task FindAssetNamesInPaksAsync(IEnumerable<string> pakFilePaths, string regexPattern, OnPakFileProcessed? pakFileProcessedHandler = null, CancellationToken cancellationToken = default)
+    {
         var tasks = pakFilePaths.Select(async pakFilePath =>
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            var mapNames = await FindMapNamesInPakAsync(pakFilePath, cancellationToken);
+            var assetNames = await FindAssetNamesInPakAsync(pakFilePath, regexPattern, cancellationToken);
             cancellationToken.ThrowIfCancellationRequested();
 
-            pakFileProcessedHandler?.Invoke(pakFilePath, mapNames);
+            pakFileProcessedHandler?.Invoke(pakFilePath, assetNames);
         });
 
         return Task.WhenAll(tasks);
     }
 
-    private static async Task<IEnumerable<string>> FindMapNamesInPakAsync(string pakFilePath, CancellationToken cancellationToken = default)
+    private static async Task<IEnumerable<string>> FindAssetNamesInPakAsync(string pakFilePath, string regexPattern, CancellationToken cancellationToken = default)
     {
         try
         {
             const int bufferSize = 1024 * 1024;
-            var mapNames = new List<string>();
-            var buffer = new char[bufferSize]; // Adjust the buffer size as needed
+            var assetNames = new ConcurrentBag<string>();
+            var buffer = new char[bufferSize];
 
             using (var fileStream = new FileStream(pakFilePath, FileMode.Open, FileAccess.Read, FileShare.Read, bufferSize: bufferSize, useAsync: true))
             using (var streamReader = new StreamReader(fileStream))
@@ -42,53 +58,34 @@ internal static class PakScanUtility
                 {
                     cancellationToken.ThrowIfCancellationRequested();
 
-                    var bytesRead = await streamReader.ReadAsync(buffer, 0, buffer.Length);
+                    var bytesRead = await streamReader.ReadAsync(buffer, 0, buffer.Length).ConfigureAwait(false);
                     var currentText = new string(buffer, 0, bytesRead);
 
-                    tasks.Add(ProcessChunkAsync(currentText, mapNames, cancellationToken));
-                    await Task.Delay(1);
+                    tasks.Add(ProcessChunkAsync(currentText, regexPattern, assetNames, cancellationToken));
                 }
 
-                await Task.WhenAll(tasks);
+                await Task.WhenAll(tasks).ConfigureAwait(false);
             }
 
-            return mapNames.Select(name => SanitizeResult(name));
+            return assetNames.Select(name => SanitizeResult(name));
         }
         catch (Exception ex)
         {
             Console.WriteLine("Error: " + ex.Message);
-            return Enumerable.Empty<string>(); // Return an empty enumerable in case of an error
+            return Enumerable.Empty<string>();
         }
     }
 
-    private static Task ProcessChunkAsync(string chunk, List<string> mapNames, CancellationToken cancellationToken)
+    private static Task ProcessChunkAsync(string chunk, string regexPattern, ConcurrentBag<string> assetNames, CancellationToken cancellationToken)
     {
-        // Use a regular expression to find occurrences of ".umap"
-        var pattern = @"\.umap";
-        var matches = Regex.Matches(chunk, pattern);
+        var matches = Regex.Matches(chunk, regexPattern);
 
-        // Parallelize the processing of matches
-        return Task.WhenAll(matches.Cast<Match>().Select(match => Task.Run(() =>
+        return Task.WhenAll(matches.Cast<Match>().Select(async match =>
         {
             cancellationToken.ThrowIfCancellationRequested();
-
-            // Walk backward to find the first slash
-            var startIndex = match.Index;
-            while (startIndex >= 0 && chunk[startIndex] != '/' && chunk[startIndex] != '\\')
-            {
-                startIndex--;
-            }
-
-            // Extract the map name
-            if (startIndex >= 0)
-            {
-                var mapName = chunk.AsMemory(startIndex + 1, match.Index - startIndex - 1);
-                lock (mapNames)
-                {
-                    mapNames.Add(mapName.ToString());
-                }
-            }
-        }, cancellationToken)));
+            var assetName = match.Value;
+            assetNames.Add(assetName);
+        }));
     }
 
     private static string SanitizeResult(string input)
