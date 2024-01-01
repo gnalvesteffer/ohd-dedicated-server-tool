@@ -6,31 +6,40 @@
              x:DataType="vm:ServerProfileDetailsViewModel"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="DedicatedServerTool.Avalonia.Views.ServerProfileDetails">
-    <StackPanel>
-        <TextBlock FontSize="24" Text="{Binding ServerProfile.ServerName}" Margin="0,0,0,25" />
+    <ScrollViewer>
+        <StackPanel>
+            <TextBlock FontSize="24" Text="{Binding ServerProfile.ServerName}" Margin="0,0,0,10" />
+            <StackPanel Classes="form-group">
+                <Border Padding="15" BorderBrush="#3fff" BorderThickness="1">
+                    <StackPanel>
+                        <StackPanel Classes="form-group">
+                            <TextBlock Text="Install Directory" />
+                            <TextBlock Classes="info" Text="The location of the server files." />
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBox Text="{Binding ServerProfile.InstallDirectory}" IsReadOnly="True" Grid.Column="0" />
+                                <Button Content="View" Command="{Binding OpenInstallDirectoryCommand}" Margin="10,0,0,0" Grid.Column="1" />
+                            </Grid>
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock Classes="form-group-header" Text="Startup Options" />
+                            <CheckBox Content="Update server files and mods before starting" IsChecked="{Binding ServerProfile.ShouldUpdateBeforeStarting}" ToolTip.Tip="Automatically updates the server files and mods before starting the server. Same behavior as pressing the Update Server button before starting the server." />
+                            <CheckBox Content="Restart server on crash" IsChecked="{Binding ServerProfile.ShouldRestartOnCrash}" ToolTip.Tip="Automatically restarts the server if it crashes. This can be toggled while the server is running, and take effect." />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
 
-        <StackPanel Classes="form-group">
-            <TextBlock Text="Install Directory" />
-            <TextBlock Classes="info" Text="The location of the server files." />
             <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <TextBox Text="{Binding ServerProfile.InstallDirectory}" IsReadOnly="True" Grid.Column="0" />
-                <Button Content="View" Command="{Binding OpenInstallDirectoryCommand}" Margin="10,0,0,0" Grid.Column="1" />
+                <Button Classes="accent" Content="Start Server" Command="{Binding StartServerCommand}" HorizontalAlignment="Left" Margin="0,0,5,0" />
+                <WrapPanel HorizontalAlignment="Right">
+                    <Button Content="Update Server and Mods" ToolTip.Tip="Updates the server files and mods. This can take a while." Command="{Binding UpdateServerAndModsCommand}" Margin="0,0,5,0" />
+                    <Button Content="Edit Profile" Command="{Binding EditServerProfileCommand}" />
+                </WrapPanel>
             </Grid>
         </StackPanel>
-
-        <Grid>
-            <WrapPanel>
-                <Button Classes="accent" Content="Start Server" Command="{Binding StartServerCommand}" HorizontalAlignment="Left" Margin="0,0,5,0" />
-                <CheckBox Content="Update Before Starting" IsChecked="{Binding ServerProfile.ShouldUpdateBeforeStarting}" ToolTip.Tip="Automatically updates the server files and mods before starting the server. Same behavior as pressing the Update Server button before starting the server." />
-            </WrapPanel>
-            <WrapPanel HorizontalAlignment="Right">
-                <Button Content="Update Server" ToolTip.Tip="Updates the server files and mods. This can take a while." Command="{Binding UpdateServerAndModsCommand}" Margin="0,0,5,0" />
-                <Button Content="Edit Profile" Command="{Binding EditServerProfileCommand}" />
-            </WrapPanel>
-        </Grid>
-    </StackPanel>
+    </ScrollViewer>
 </UserControl>

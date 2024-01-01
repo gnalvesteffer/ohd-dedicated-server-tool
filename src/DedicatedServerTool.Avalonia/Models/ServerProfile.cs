@@ -1,7 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using DedicatedServerTool.Avalonia.Core;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 
 namespace DedicatedServerTool.Avalonia.Models;
 public class ServerProfile : ObservableObject
@@ -211,6 +210,13 @@ public class ServerProfile : ObservableObject
     {
         get => _shouldUpdateBeforeStarting;
         set => SetProperty(ref _shouldUpdateBeforeStarting, value);
+    }
+
+    private bool _shouldRestartOnCrash;
+    public bool ShouldRestartOnCrash
+    {
+        get => _shouldRestartOnCrash;
+        set => SetProperty(ref _shouldRestartOnCrash, value);
     }
 
     public IEnumerable<long> GetInstalledWorkshopIds()

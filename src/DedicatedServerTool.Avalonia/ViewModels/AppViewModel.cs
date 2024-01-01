@@ -5,8 +5,6 @@ using System.Linq;
 using System.Windows.Input;
 using Avalonia.Controls;
 using DedicatedServerTool.Avalonia.Models;
-using System.Diagnostics;
-using System.Threading.Tasks;
 using System.Reflection;
 
 namespace DedicatedServerTool.Avalonia.ViewModels;

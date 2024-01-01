@@ -29,10 +29,11 @@ internal static class PakScanUtility
     {
         try
         {
+            const int bufferSize = 1024 * 1024;
             var mapNames = new List<string>();
-            var buffer = new char[4096]; // Adjust the buffer size as needed
+            var buffer = new char[bufferSize]; // Adjust the buffer size as needed
 
-            using (var fileStream = new FileStream(pakFilePath, FileMode.Open, FileAccess.Read, FileShare.Read, bufferSize: 4096, useAsync: true))
+            using (var fileStream = new FileStream(pakFilePath, FileMode.Open, FileAccess.Read, FileShare.Read, bufferSize: bufferSize, useAsync: true))
             using (var streamReader = new StreamReader(fileStream))
             {
                 var tasks = new List<Task>();
@@ -45,7 +46,7 @@ internal static class PakScanUtility
                     var currentText = new string(buffer, 0, bytesRead);
 
                     tasks.Add(ProcessChunkAsync(currentText, mapNames, cancellationToken));
-                    await Task.Delay(10);
+                    await Task.Delay(1);
                 }
 
                 await Task.WhenAll(tasks);

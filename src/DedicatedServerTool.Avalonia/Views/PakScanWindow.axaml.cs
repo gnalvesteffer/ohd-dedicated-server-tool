@@ -1,8 +1,6 @@
 using Avalonia.Controls;
-using Avalonia.Interactivity;
 using DedicatedServerTool.Avalonia.Models;
 using DedicatedServerTool.Avalonia.ViewModels;
-using System.ComponentModel;
 
 namespace DedicatedServerTool.Avalonia.Views
 {

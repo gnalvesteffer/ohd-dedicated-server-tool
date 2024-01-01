@@ -3,6 +3,8 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DedicatedServerTool.Avalonia.Core;
 using DedicatedServerTool.Avalonia.Models;
+using DedicatedServerTool.Avalonia.Views;
+using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -64,11 +66,19 @@ public class ServerProfileDetailsViewModel : ObservableObject
 
     private async Task StartServerAsync()
     {
-        if (ServerProfile.ShouldUpdateBeforeStarting)
+        try
         {
-            await UpdateServerAndModsAsync();
+            if (ServerProfile.ShouldUpdateBeforeStarting)
+            {
+                await UpdateServerAndModsAsync();
+            }
+
+            await ServerUtility.StartServerAsync(ServerProfile);
         }
-        ServerUtility.StartServer(ServerProfile);
+        catch (Exception exception)
+        {
+            new MessageBoxWindow("Error", exception.Message).Show();
+        }
     }
 
 }

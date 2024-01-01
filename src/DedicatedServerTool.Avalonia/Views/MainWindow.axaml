@@ -13,18 +13,20 @@
         Title="{Binding AppTitle}">
 
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="0.75*" MinWidth="300" MaxWidth="500" />
-            <ColumnDefinition Width="2.0*" />
-        </Grid.ColumnDefinitions>
+        <Image Source="/Assets/background.png" Stretch="UniformToFill" Opacity="0.05" />
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.75*" MinWidth="300" MaxWidth="500" />
+                <ColumnDefinition Width="2.0*" />
+            </Grid.ColumnDefinitions>
 
-        <Image Source="/Assets/background.png" Stretch="UniformToFill" Grid.ColumnSpan="2" Opacity="0.05" />
-        <local:ServerProfileList Grid.Column="0" />
-        <Border BoxShadow="0 0 15 0 #5000" Grid.Column="1">
-            <Panel IsVisible="{Binding IsServerProfileSelected}">
-                <local:ServerProfileDetails DataContext="{Binding ServerProfileDetailsViewModel}" IsVisible="{Binding ServerProfile.IsSetUp}" Margin="10" />
-                <local:ServerProfileSetup DataContext="{Binding ServerProfileSetupViewModel}" IsVisible="{Binding !ServerProfile.IsSetUp}" Margin="10" />
-            </Panel>
-        </Border>
+            <local:ServerProfileList Grid.Column="0" />
+            <Border BoxShadow="0 0 15 0 #5000" Grid.Column="1">
+                <Panel IsVisible="{Binding IsServerProfileSelected}">
+                    <local:ServerProfileDetails DataContext="{Binding ServerProfileDetailsViewModel}" IsVisible="{Binding ServerProfile.IsSetUp}" Margin="10" />
+                    <local:ServerProfileSetup DataContext="{Binding ServerProfileSetupViewModel}" IsVisible="{Binding !ServerProfile.IsSetUp}" Margin="10" />
+                </Panel>
+            </Border>
+        </Grid>
     </Grid>
 </Window>

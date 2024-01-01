@@ -1,0 +1,25 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="using:DedicatedServerTool.Avalonia.ViewModels"
+        x:DataType="vm:MessageBoxViewModel"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        Width="400"
+        MinHeight="50"
+        Height="200"
+        x:Class="DedicatedServerTool.Avalonia.Views.MessageBoxWindow"
+        Title="{Binding Title}"
+        Icon="/Assets/ohd.ico"
+        Padding="25">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <ScrollViewer Grid.Row="0">
+            <TextBlock Text="{Binding Message}" TextWrapping="Wrap" />
+        </ScrollViewer>
+        <Button Content="Close" Command="{Binding CloseCommand}" HorizontalAlignment="Right" Grid.Row="1" />
+    </Grid>
+</Window>

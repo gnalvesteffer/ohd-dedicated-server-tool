@@ -1,13 +1,17 @@
 ﻿using DedicatedServerTool.Avalonia.Models;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace DedicatedServerTool.Avalonia.Core;
 internal static class ServerUtility
 {
-    public static void StartServer(ServerProfile profile)
+    private static readonly HashSet<int> CleanExitCodes = new HashSet<int> { 0, -1073741510 };
+
+    public static async Task StartServerAsync(ServerProfile profile)
     {
         var queryParameters = new StringBuilder();
         queryParameters.Append($"?game={profile.GameModePath.Trim()}");
@@ -66,15 +70,19 @@ internal static class ServerUtility
         {
             WorkingDirectory = profile.InstallDirectory,
             FileName = Path.Combine(profile.InstallDirectory, @"HarshDoorstop\Binaries\Win64\HarshDoorstopServer-Win64-Shipping.exe"),
-            Arguments = $"{profile.InitialMapName}{queryParameters} -log -Port={profile.Port} -QueryPort={profile.QueryPort} -SteamServerName=\"{profile.ServerName}\" %*",
-            UseShellExecute = false,
-            CreateNoWindow = false,
-            RedirectStandardOutput = false,
-            RedirectStandardError = false
+            Arguments = $"{profile.InitialMapName}{queryParameters} -log -Port={profile.Port} -QueryPort={profile.QueryPort} -SteamServerName=\"{profile.ServerName}\" %*"
         };
 
-        using Process process = new Process { StartInfo = startInfo };
-        process.Start();
+        do
+        {
+            using Process process = new Process { StartInfo = startInfo };
+            process.Start();
+            await process.WaitForExitAsync();
+            if (CleanExitCodes.Contains(process.ExitCode))
+            {
+                break;
+            }
+        } while (profile.ShouldRestartOnCrash);
     }
 
     private static void WriteIniAndConfigFiles(ServerProfile profile)

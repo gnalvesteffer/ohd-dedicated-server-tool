@@ -4,8 +4,6 @@ using CommunityToolkit.Mvvm.Input;
 using DedicatedServerTool.Avalonia.Core;
 using DedicatedServerTool.Avalonia.Models;
 using DedicatedServerTool.Avalonia.Views;
-using System;
-using System.Collections;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
