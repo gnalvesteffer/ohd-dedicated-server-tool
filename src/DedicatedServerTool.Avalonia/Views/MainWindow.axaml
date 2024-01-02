@@ -15,17 +15,33 @@
     <Grid>
         <Image Source="/Assets/background.png" Stretch="UniformToFill" Opacity="0.05" />
         <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="0.75*" MinWidth="300" MaxWidth="500" />
                 <ColumnDefinition Width="2.0*" />
             </Grid.ColumnDefinitions>
 
-            <local:ServerProfileList Grid.Column="0" />
-            <Border BoxShadow="0 0 15 0 #5000" Grid.Column="1">
+            <local:ServerProfileList Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" />
+            <Border BoxShadow="0 0 15 0 #5000" Grid.Row="0" Grid.Column="1">
                 <Panel IsVisible="{Binding IsServerProfileSelected}">
                     <local:ServerProfileDetails DataContext="{Binding ServerProfileDetailsViewModel}" IsVisible="{Binding ServerProfile.IsSetUp}" Margin="10" />
                     <local:ServerProfileSetup DataContext="{Binding ServerProfileSetupViewModel}" IsVisible="{Binding !ServerProfile.IsSetUp}" Margin="10" />
                 </Panel>
+            </Border>
+
+            <Border Padding="10" Grid.Row="1" Grid.Column="1">
+                <WrapPanel HorizontalAlignment="Right" >
+                    <TextBlock Text="Support the development of this tool!" FontStyle="Italic" VerticalAlignment="Center" Margin="0,0,5,0" />
+                    <Button Command="{Binding OpenPayPalLinkCommand}" ToolTip.Tip="Open PayPal Donation Page" Margin="0,0,5,0">
+                        <Image Source="/Assets/paypal.png" Height="16" VerticalAlignment="Center" />
+                    </Button>
+                    <Button Command="{Binding OpenPatreonLinkCommand}" ToolTip.Tip="Open Patreon Page">
+                        <Image Source="/Assets/patreon.png" Height="16" VerticalAlignment="Center" />
+                    </Button>
+                </WrapPanel>
             </Border>
         </Grid>
     </Grid>

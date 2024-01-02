@@ -90,6 +90,8 @@ public partial class AppViewModel : ViewModelBase
     public ICommand CreateServerProfileCommand { get; }
     public ICommand DeleteServerProfileSetupCommand { get; }
     public ICommand SaveAppStateCommand { get; }
+    public ICommand OpenPayPalLinkCommand { get; }
+    public ICommand OpenPatreonLinkCommand { get; }
 
     public AppViewModel()
     {
@@ -98,6 +100,8 @@ public partial class AppViewModel : ViewModelBase
         CreateServerProfileCommand = new RelayCommand(CreateServerProfile);
         DeleteServerProfileSetupCommand = new RelayCommand(DeleteServerProfileSetup);
         SaveAppStateCommand = new RelayCommand(SaveAppState);
+        OpenPayPalLinkCommand = new RelayCommand(() => UrlUtility.OpenUrl("https://www.paypal.com/donate/?cmd=_s-xclick&hosted_button_id=923HVE4MUDRSA&source=url"));
+        OpenPatreonLinkCommand = new RelayCommand(() => UrlUtility.OpenUrl("https://www.patreon.com/xorberax"));
         SelectedServerProfile = ServerProfiles.FirstOrDefault();
     }
 

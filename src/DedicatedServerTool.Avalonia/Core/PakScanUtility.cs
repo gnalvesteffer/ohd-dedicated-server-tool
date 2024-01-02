@@ -13,17 +13,27 @@ internal static class PakScanUtility
 
     public static Task FindMapNamesInPaksAsync(IEnumerable<string> pakFilePaths, OnPakFileProcessed? pakFileProcessedHandler = null, CancellationToken cancellationToken = default)
     {
-        return FindAssetNamesInPaksAsync(pakFilePaths, @"(?<=\/)([^\/]*[^\/]+)(?=\.umap)", pakFileProcessedHandler, cancellationToken);
+        return FindAssetNamesInPaksAsync(
+            pakFilePaths,
+            @"(?<=\/)([^\/]*[^\/]+)(?=\.umap)",
+            pakFileProcessedHandler,
+            cancellationToken
+        );
     }
 
     public static Task FindGameModeNamesInPaksAsync(IEnumerable<string> pakFilePaths, OnPakFileProcessed? pakFileProcessedHandler = null, CancellationToken cancellationToken = default)
     {
-        return FindAssetNamesInPaksAsync(pakFilePaths, @"(?<=\/)([^\/]+Game[^\/]+)(?=\.uasset)", pakFileProcessedHandler, cancellationToken);
+        throw new NotImplementedException();
     }
 
     public static Task FindFactionNamesInPaksAsync(IEnumerable<string> pakFilePaths, OnPakFileProcessed? pakFileProcessedHandler = null, CancellationToken cancellationToken = default)
     {
-        return FindAssetNamesInPaksAsync(pakFilePaths, @"(?<=\/)([^\/]+Faction[^\/]+)(?=\.uasset)", pakFileProcessedHandler, cancellationToken);
+        return FindAssetNamesInPaksAsync(
+            pakFilePaths,
+            @"(?<=\/)([^\/]+FactionInfo[^\/]+)(?=\.uasset)",
+            pakFileProcessedHandler,
+            cancellationToken
+        );
     }
 
     private static Task FindAssetNamesInPaksAsync(IEnumerable<string> pakFilePaths, string regexPattern, OnPakFileProcessed? pakFileProcessedHandler = null, CancellationToken cancellationToken = default)

@@ -24,8 +24,8 @@
                 <WrapPanel>
                     <Button Content="Scan Base Maps" Command="{Binding FindVanillaMapsCommand}" />
                     <Button Content="Scan Mod Maps" Command="{Binding FindModMapsCommand}" />
-                    <Button Content="Scan Base Gamemodes" Command="{Binding FindVanillaGameModesCommand}" />
-                    <Button Content="Scan Mod Gamemodes" Command="{Binding FindModGameModesCommand}" />
+                    <!--<Button Content="Scan Base Gamemodes" Command="{Binding FindVanillaGameModesCommand}" />
+                    <Button Content="Scan Mod Gamemodes" Command="{Binding FindModGameModesCommand}" />-->
                     <Button Content="Scan Base Factions" Command="{Binding FindVanillaFactionsCommand}" />
                     <Button Content="Scan Mod Factions" Command="{Binding FindModFactionsCommand}" />
                 </WrapPanel>

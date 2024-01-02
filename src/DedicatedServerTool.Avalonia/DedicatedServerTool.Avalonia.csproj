@@ -19,6 +19,8 @@
     <ItemGroup>
         <None Remove="Assets\background.png" />
         <None Remove="Assets\ohd.ico" />
+        <None Remove="Assets\patreon.png" />
+        <None Remove="Assets\paypal.png" />
     </ItemGroup>
 
     <ItemGroup>
