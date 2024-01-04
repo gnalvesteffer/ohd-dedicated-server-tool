@@ -226,6 +226,13 @@ public class ServerProfile : ObservableObject
         set => SetProperty(ref _shouldUseUpnpForPortForwarding, value);
     }
 
+    private bool _shouldAutoUpdateMods;
+    public bool ShouldAutoUpdateMods
+    {
+        get => _shouldAutoUpdateMods;
+        set => SetProperty(ref _shouldAutoUpdateMods, value);
+    }
+
     public IEnumerable<long> GetInstalledWorkshopIds()
     {
         return InstalledWorkshopModUtility.GetInstalledWorkshopIds(InstallDirectory);

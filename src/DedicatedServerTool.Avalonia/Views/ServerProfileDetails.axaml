@@ -27,9 +27,10 @@
                         <StackPanel>
                             <TextBlock Classes="form-group-header" Text="Startup Options" />
                             <CheckBox Content="Update server files and mods before starting" IsChecked="{Binding ServerProfile.ShouldUpdateBeforeStarting}" ToolTip.Tip="Automatically updates the server files and mods before starting the server. Same behavior as pressing the Update Server button before starting the server." />
-                            <CheckBox Content="Restart server on crash" IsChecked="{Binding ServerProfile.ShouldRestartOnCrash}" ToolTip.Tip="Automatically restarts the server if it crashes. This can be toggled while the server is running, and take effect." />
+							<CheckBox Content="Restart if mods are out of date" IsChecked="{Binding ServerProfile.ShouldAutoUpdateMods}" ToolTip.Tip="Whether or not to call for mod updates periodically and restart the server if mods have been updated on the workshop."></CheckBox>
+							<CheckBox Content="Restart server on crash" IsChecked="{Binding ServerProfile.ShouldRestartOnCrash}" ToolTip.Tip="Automatically restarts the server if it crashes. This can be toggled while the server is running, and take effect." />
                             <CheckBox Content="Auto-configure Port Forwarding via uPnP" IsChecked="{Binding ServerProfile.ShouldUseUpnpForPortForwarding}" ToolTip.Tip="When enabled, attempts to automatically configure port forwarding via uPnP when the server starts, and cleans them up when the server stops. (Only available on supported routers)" />
-                        </StackPanel>
+						</StackPanel>
                     </StackPanel>
                 </Border>
             </StackPanel>
@@ -38,7 +39,7 @@
                 <Button Classes="accent" Content="Start Server" Command="{Binding StartServerCommand}" HorizontalAlignment="Left" Margin="0,0,5,0" />
                 <WrapPanel HorizontalAlignment="Right">
                     <Button Content="Update Server and Mods" ToolTip.Tip="Updates the server files and mods. This can take a while." Command="{Binding UpdateServerAndModsCommand}" Margin="0,0,5,0" />
-                    <Button Content="Edit Profile" Command="{Binding EditServerProfileCommand}" />
+					<Button Content="Edit Profile" Command="{Binding EditServerProfileCommand}" />
                 </WrapPanel>
             </Grid>
         </StackPanel>

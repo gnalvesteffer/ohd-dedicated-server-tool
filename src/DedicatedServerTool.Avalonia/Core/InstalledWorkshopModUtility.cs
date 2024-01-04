@@ -22,6 +22,23 @@ namespace DedicatedServerTool.Avalonia.Core
             return string.Empty;
         }
 
+        internal static DateTime GetModLastUpdated(string serverInstallDirectory, long workshopId)
+        {
+            var workshopItemDirectory = Path.Combine(serverInstallDirectory, @$"steamapps\workshop\content\736590\{workshopId}");
+            if (Directory.Exists(workshopItemDirectory))
+            {
+                var modFolderName = Directory.GetDirectories(workshopItemDirectory).FirstOrDefault();
+                if (modFolderName != null)
+                {
+                    return new FileInfo(modFolderName).LastWriteTime;
+                }
+                else
+                {
+                    throw new Exception($"Mod: {workshopId} is not installed or couldn't be found");
+                }
+            }
+            return DateTime.Now;
+        }
         internal static IEnumerable<long> GetInstalledWorkshopIds(string serverInstallDirectory)
         {
             var workshopDirectory = Path.Combine(serverInstallDirectory, @"steamapps\workshop\content\736590\");
@@ -42,6 +59,28 @@ namespace DedicatedServerTool.Avalonia.Core
                 }
             }
             return workshopIds;
+        }
+
+        internal static async Task<bool> IsModOutOfDate(string serverInstallDirectory, long workshopId)
+        {
+
+            try
+            {
+                DateTime workshopLastUpdated = await ScrapeWorkshopItemLastUpdated(workshopId);
+                DateTime modFolderLastUpdated = GetModLastUpdated(serverInstallDirectory, workshopId);
+
+                // returns true if workshopLastUpdated is a LATER date than modFolderLastUpdated
+                return workshopLastUpdated.CompareTo(modFolderLastUpdated) > 0;
+            } catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                if (ex.Message.Contains("Mod:"))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         internal static void OpenWorkshopPage(long workshopId)
@@ -145,5 +184,61 @@ namespace DedicatedServerTool.Avalonia.Core
                 }
             }
         }
+
+        
+        public static async Task<DateTime> ScrapeWorkshopItemLastUpdated(long workshopItemId)
+        {
+            string workshopItemUrl = $"https://steamcommunity.com/sharedfiles/filedetails/?id={workshopItemId}";
+
+            using (var httpClient = new HttpClient())
+            {
+                // Download the HTML content of the workshop item page
+                string htmlContent = await httpClient.GetStringAsync(workshopItemUrl);
+                //htmlContent.cookies
+
+
+
+                // GET TIMEZONE OFFSET
+                HttpResponseMessage response = await httpClient.GetAsync(workshopItemUrl);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var cookies = response.Headers.GetValues("Set-Cookie");
+
+                    foreach (var cookie in cookies)
+                    {
+                        Console.WriteLine(cookie);
+                    }
+                }
+
+                // Load the HTML content into HtmlAgilityPack's HtmlDocument
+                var htmlDocument = new HtmlDocument();
+                htmlDocument.LoadHtml(htmlContent);
+
+
+                // Use XPath to select the last updated or date createde(if it hasn't been updated)
+                var lastUpdateNode = htmlDocument.DocumentNode.SelectNodes("//div[@class='detailsStatRight']");
+
+                if (lastUpdateNode != null)
+                {
+                    try
+                    {
+                        string lastUpdatedString = lastUpdateNode.Last().InnerText.Trim().ToString();
+                        return DateTimeUtility.ParseScrapedSteamDateTime(lastUpdatedString);
+                    }
+                    catch(Exception ex)
+                    {
+                        Console.WriteLine("Failed to scrape workshop item last updated");
+                        throw ex;
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Date time element not found on the page.");
+                    throw new Exception("Date time unavailable on workshop item");
+                }
+            }
+        }
+        
     }
 }

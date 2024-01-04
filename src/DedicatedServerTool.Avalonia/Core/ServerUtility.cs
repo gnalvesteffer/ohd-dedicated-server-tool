@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DedicatedServerTool.Avalonia.Core;
@@ -91,14 +92,43 @@ internal static class ServerUtility
 
             do
             {
+                
                 using Process process = new Process { StartInfo = startInfo };
+                Thread modCheckTask = new Thread(async () => await CheckForOutOfDateProfileModsAsync(profile, process));
                 process.Start();
+
+                if (profile.ShouldAutoUpdateMods)
+                {
+                    modCheckTask.Start();
+                }
+
                 await process.WaitForExitAsync();
+
                 if (CleanExitCodes.Contains(process.ExitCode))
                 {
                     break;
                 }
-            } while (profile.ShouldRestartOnCrash);
+                else if (!profile.ShouldRestartOnCrash && !profile.ShouldAutoUpdateMods)
+                {
+                    break; // allow server to crash if should restart setting isn't enabled
+                }
+                
+                if (profile.ShouldAutoUpdateMods)
+                {
+
+                    var updateModsTask = Parallel.ForEachAsync(profile.GetInstalledWorkshopIds(), async (workshopId, cancellationToken) =>
+                    {
+                        if (cancellationToken.IsCancellationRequested)
+                        {
+                            return;
+                        }
+
+                        await SteamCmdUtility.DownloadOrUpdateModAsync(profile.InstallDirectory, workshopId);
+                    });
+
+                    await Task.WhenAll(updateModsTask);
+                }
+            } while (profile.ShouldRestartOnCrash || profile.ShouldAutoUpdateMods);
         }
         catch (MappingException exception)
         {
@@ -112,6 +142,66 @@ internal static class ServerUtility
         {
             await portForwardManager.ClosePortsAsync();
         }
+
+    }
+
+    private static async Task CheckForOutOfDateProfileModsAsync(ServerProfile profile, Process process)
+    {
+        while (true)
+        {
+            Thread.Sleep((1000 * 5));
+            process.Refresh();
+            try
+            {
+                if (!process.HasExited)
+                {
+                    bool hasOutOfDateMods = await PofileHasOutOfDateModsAsync(profile);
+
+                    if (hasOutOfDateMods)
+                    {
+                        process.Kill(); // TODO: this is not very nice
+
+                        break;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // the process has likely been manually stopped.
+                break;
+            }
+        }
+        // Perform checks for outdated mods
+    }
+
+    private static async Task<bool> PofileHasOutOfDateModsAsync(ServerProfile profile)
+    {
+        try
+        {
+            //DateTime modLastUpdated = await InstalledWorkshopModUtility.ScrapeWorkshopItemLastUpdated(3127339017);
+            
+            foreach(long modId in profile.GetInstalledWorkshopIds())
+            {
+                try
+                {
+                    if (await InstalledWorkshopModUtility.IsModOutOfDate(profile.InstallDirectory, modId))
+                    {
+                        return true;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                }
+            }
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Something went wrong with update check");
+        }
+
+        return false;
     }
 
     private static void WriteIniAndConfigFiles(ServerProfile profile)
