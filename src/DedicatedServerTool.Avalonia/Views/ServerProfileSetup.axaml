@@ -166,7 +166,7 @@
                             <StackPanel Classes="form-group" Width="175" Margin="0,10,10,0" VerticalAlignment="Bottom">
                                 <TextBlock Text="Human Team ID" />
                                 <TextBlock Classes="info" TextWrapping="Wrap" Text="Forces players to be on a specific team, allowing for co-op gameplay (players vs bots). Leave blank to allow players to join any team." />
-                                <NumericUpDown Value="{Binding ServerProfile.TeamIdToAutoAssignHumans}" Minimum="0" Maximum="254" Increment="1" FormatString="0" />
+                                <NumericUpDown Value="{Binding ServerProfile.TeamIdToAutoAssignHumans}" Minimum="0" Maximum="254" Increment="1" FormatString="0" ToolTip.Tip="Usually 0=Opfor, 1=Blufor (other team numbers are reserved for gamemodes that may support more teams)." />
                             </StackPanel>
                             <StackPanel Classes="form-group" Width="175" Margin="0,10,10,0" VerticalAlignment="Bottom">
                                 <TextBlock Text="Respawn Time" />
