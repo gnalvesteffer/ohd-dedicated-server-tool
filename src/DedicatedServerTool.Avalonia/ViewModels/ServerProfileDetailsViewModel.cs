@@ -52,27 +52,13 @@ public class ServerProfileDetailsViewModel : ObservableObject
 
     private Task UpdateServerAndModsAsync()
     {
-        var updateServerTask = SteamCmdUtility.DownloadOrUpdateDedicatedServerAsync(ServerProfile.InstallDirectory);
-        var updateModsTask = Parallel.ForEachAsync(ServerProfile.GetInstalledWorkshopIds(), async (workshopId, cancellationToken) =>
-        {
-            if (cancellationToken.IsCancellationRequested)
-            {
-                return;
-            }
-            await SteamCmdUtility.DownloadOrUpdateModAsync(ServerProfile.InstallDirectory, workshopId);
-        });
-        return Task.WhenAll(updateServerTask, updateModsTask);
+        return ServerUtility.UpdateServerAndModsAsync(ServerProfile);
     }
 
     private async Task StartServerAsync()
     {
         try
         {
-            if (ServerProfile.ShouldUpdateBeforeStarting)
-            {
-                await UpdateServerAndModsAsync();
-            }
-
             await ServerUtility.StartServerAsync(ServerProfile);
         }
         catch (Exception exception)

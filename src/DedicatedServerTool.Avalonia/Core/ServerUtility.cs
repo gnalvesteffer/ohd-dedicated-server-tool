@@ -93,14 +93,37 @@ internal static class ServerUtility
 
             do
             {
-                using Process process = new Process { StartInfo = startInfo };
+                if (profile.ShouldUpdateBeforeStarting)
+                {
+                    await UpdateServerAndModsAsync(profile);
+                }
+
+                var isRestarting = false;
+                using Process process = new() { StartInfo = startInfo };
                 process.Start();
+
+                var tasks = new List<Task>
+                {
+                    process.WaitForExitAsync()
+                };
+                if (profile.RestartIntervalHours > 0)
+                {
+                    tasks.Add(Task.Delay(TimeSpan.FromHours(profile.RestartIntervalHours.Value)).ContinueWith(_ => isRestarting = true));
+                }
+                await Task.WhenAny(tasks); // wait for either the server to crash or to restart
+
+                if (!process.HasExited)
+                {
+                    process.CloseMainWindow();
+                }
+
                 await process.WaitForExitAsync();
-                if (CleanExitCodes.Contains(process.ExitCode))
+
+                if (!isRestarting && CleanExitCodes.Contains(process.ExitCode))
                 {
                     break;
                 }
-            } while (profile.ShouldRestartOnCrash);
+            } while (profile.ShouldRestartOnCrash || profile.RestartIntervalHours.HasValue);
         }
         catch (MappingException exception)
         {
@@ -114,6 +137,20 @@ internal static class ServerUtility
         {
             await portForwardManager.ClosePortsAsync();
         }
+    }
+
+    public static Task UpdateServerAndModsAsync(ServerProfile serverProfile)
+    {
+        var updateServerTask = SteamCmdUtility.DownloadOrUpdateDedicatedServerAsync(serverProfile.InstallDirectory);
+        var updateModsTask = Parallel.ForEachAsync(serverProfile.GetInstalledWorkshopIds(), async (workshopId, cancellationToken) =>
+        {
+            if (cancellationToken.IsCancellationRequested)
+            {
+                return;
+            }
+            await SteamCmdUtility.DownloadOrUpdateModAsync(serverProfile.InstallDirectory, workshopId);
+        });
+        return Task.WhenAll(updateServerTask, updateModsTask);
     }
 
     private static void WriteIniAndConfigFiles(ServerProfile profile)
@@ -166,5 +203,4 @@ internal static class ServerUtility
         Directory.CreateDirectory(Path.GetDirectoryName(adminsConfigPath)!);
         File.WriteAllText(adminsConfigPath, stringBuilder.ToString());
     }
-
 }
