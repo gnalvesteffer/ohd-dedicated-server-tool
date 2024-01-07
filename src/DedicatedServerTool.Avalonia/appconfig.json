@@ -1,0 +1,102 @@
+﻿{
+    "Factions": [
+        {
+            "Classname": "BP_OMFactionInfo_UnitedStates",
+            "Description": "USA (WW1)"
+        },
+        {
+            "Classname": "BP_OMFactionInfo_Germany",
+            "Description": "Germany (WW1)"
+        },
+        {
+            "Classname": "BP_OOFactionInfo_USA",
+            "Description": "USA (US Army - WW2)"
+        },
+        {
+            "Classname": "BP_OOFactionInfo_USRangers",
+            "Description": "USA (1st Infantry Div - WW2)"
+        },
+        {
+            "Classname": "BP_OOFactionInfo_Germany",
+            "Description": "Germany (Fallschirmjäger - WW2)"
+        },
+        {
+            "Classname": "BP_OOFactionInfo_Wehrmact",
+            "Description": "Germany (Wehrmacht - WW2)"
+        },
+        {
+            "Classname": "BP_RSFactionInfo_USArmy",
+            "Description": "USA (Vietnam)"
+        },
+        {
+            "Classname": "BP_RSFactionInfo_NVA",
+            "Description": "NVA (Vietnam)"
+        },
+        {
+            "Classname": "BP_HDFactionInfo_UnitedStates",
+            "Description": "USA (Cold War)"
+        },
+        {
+            "Classname": "BP_HDFactionInfo_Russians",
+            "Description": "Soviet Union (Cold War)"
+        },
+        {
+            "Classname": "BP_HDFactionInfo_PMC",
+            "Description": "PMC (Modern)"
+        },
+        {
+            "Classname": "BP_HDFactionInfo_Insurgents",
+            "Description": "Insurgents (Modern)"
+        },
+        {
+            "Classname": "BP_HDFactionInfo_TG_Blufor",
+            "Description": "Blufor (Debug)"
+        },
+        {
+            "Classname": "BP_HDFactionInfo_TG_OpFor",
+            "Description": "Opfor (Debug)"
+        }
+    ],
+    "Maps": [
+        {
+            "Classname": "Argonne",
+            "Description": "Argonne (WWI)"
+        },
+        {
+            "Classname": "SaintQuentin",
+            "Description": "Saint Quentin (WWI) - DLC: Michael"
+        },
+        {
+            "Classname": "MonteCassino",
+            "Description": "Monte Cassino (WWII)"
+        },
+        {
+            "Classname": "OmahaBeach",
+            "Description": "Omaha Beach (WWII) - DLC: Overlord"
+        },
+        {
+            "Classname": "Carentan",
+            "Description": "Carentan (WWII) - DLC: Overlord"
+        },
+        {
+            "Classname": "LamDong",
+            "Description": "Lam Dong (Vietnam War)"
+        },
+        {
+            "Classname": "Tan_Binh",
+            "Description": "Tan Binh (Vietnam War) - DLC: Rolling Stone"
+        },
+        {
+            "Classname": "Khafji_P",
+            "Description": "Khafji (Modern)"
+        },
+        {
+            "Classname": "Jaziira",
+            "Description": "Jaziira (Modern)"
+        },
+        {
+            "Classname": "Risala",
+            "Description": "Risala (Modern)"
+        }
+    ]
+}

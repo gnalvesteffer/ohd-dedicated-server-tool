@@ -114,8 +114,13 @@
                     <StackPanel>
                         <StackPanel Classes="form-group">
                             <TextBlock Text="Asset Scanner" />
-                            <TextBlock Classes="info" TextWrapping="Wrap" Text="The Asset Scanner attempts to find asset info such as map names, which you can then copy into the fields below." />
+                            <TextBlock Classes="info" TextWrapping="Wrap" Text="The Asset Scanner attempts to find asset info embedded in the game and mods' .pak files, such as map and factions names, which you can then copy into the fields below. This is slow, and potentially inaccurate. It's best to consult the official documentation for the game and mods for the asset names." />
                             <Button Content="Open Asset Scanner" Command="{Binding OpenAssetScannerCommand}" />
+                        </StackPanel>
+                        <StackPanel Classes="form-group">
+                            <TextBlock Text="Asset List" />
+                            <TextBlock Classes="info" TextWrapping="Wrap" Text="Displays a list of the game's map and faction names that can be copied to the fields below. This is faster than using the Asset Scanner, but the data is hardcoded (defined in the appconfig.json)." />
+                            <Button Content="View Asset List" Command="{Binding OpenAssetListCommand}" />
                         </StackPanel>
                         <WrapPanel Classes="form-group">
                             <StackPanel Classes="form-group" Width="300" Margin="0,0,10,0" VerticalAlignment="Bottom">

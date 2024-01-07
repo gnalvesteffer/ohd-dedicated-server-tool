@@ -76,6 +76,7 @@ public class ServerProfileSetupViewModel : ObservableObject
     public ICommand DiscardServerProfileSetupCommand { get; }
     public ICommand DownloadServerFilesCommand { get; }
     public ICommand OpenAssetScannerCommand { get; }
+    public ICommand OpenAssetListCommand { get; }
     public ICommand AddWorkshopIdCommand { get; }
     public ICommand RefreshInstalledMods { get; }
 
@@ -88,6 +89,7 @@ public class ServerProfileSetupViewModel : ObservableObject
         DiscardServerProfileSetupCommand = onDiscardServerProfile;
         DownloadServerFilesCommand = new AsyncRelayCommand(DownloadOrUpdateServerFilesAsync);
         OpenAssetScannerCommand = new RelayCommand(OpenAssetScanner);
+        OpenAssetListCommand = new RelayCommand(OpenAssetList);
         AddWorkshopIdCommand = new AsyncRelayCommand(AddWorkshopIdAsync);
         RefreshInstalledMods = new RelayCommand(RehydrateInstalledWorkshopIds);
         UpdateServerFileProperties();
@@ -120,8 +122,8 @@ public class ServerProfileSetupViewModel : ObservableObject
 
     private void UpdateCanSave()
     {
-        CanSave = 
-            AreServerFilesInstalled && 
+        CanSave =
+            AreServerFilesInstalled &&
             !string.IsNullOrWhiteSpace(ServerProfile.ServerName) &&
             ServerProfile.Port.HasValue &&
             ServerProfile.ClientPort.HasValue &&
@@ -168,6 +170,12 @@ public class ServerProfileSetupViewModel : ObservableObject
     {
         var scanWindow = new PakScanWindow(ServerProfile);
         scanWindow.Show();
+    }
+
+    private void OpenAssetList()
+    {
+        var assetListWindow = new AssetListWindow();
+        assetListWindow.Show();
     }
 
     private async Task AddWorkshopIdAsync()
