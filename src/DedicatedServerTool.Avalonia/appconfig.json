@@ -50,11 +50,11 @@
         },
         {
             "Classname": "BP_HDFactionInfo_TG_Blufor",
-            "Description": "Blufor (Debug)"
+            "Description": "Blufor (Development)"
         },
         {
             "Classname": "BP_HDFactionInfo_TG_OpFor",
-            "Description": "Opfor (Debug)"
+            "Description": "Opfor (Development)"
         }
     ],
     "Maps": [
@@ -97,6 +97,14 @@
         {
             "Classname": "Risala",
             "Description": "Risala (Modern)"
+        },
+        {
+            "Classname": "TrainingGrounds",
+            "Description": "Training Grounds (Modern)"
+        },
+        {
+            "Classname": "AAS-TestMap",
+            "Description": "Test Map (Development)"
         }
     ]
 }

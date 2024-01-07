@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.Input;
 using DedicatedServerTool.Avalonia.Core;
 using DedicatedServerTool.Avalonia.Models;
 using DedicatedServerTool.Avalonia.Views;
+using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
@@ -71,6 +72,24 @@ public class ServerProfileSetupViewModel : ObservableObject
         set => SetProperty(ref _canSave, value);
     }
 
+    private ObservableCollection<IpAddressInfo> _localIpAddressInfos = new();
+    public ObservableCollection<IpAddressInfo> LocalIpAddressInfos
+    {
+        get => _localIpAddressInfos;
+        set => SetProperty(ref _localIpAddressInfos, value);
+    }
+
+    private IpAddressInfo? _selectedMultihomeIpAddressInfo;
+    public IpAddressInfo? SelectedMultihomeIpAddressInfo
+    {
+        get => _selectedMultihomeIpAddressInfo;
+        set
+        {
+            ServerProfile.MultihomeIp = value?.IpAddress.ToString();
+            SetProperty(ref _selectedMultihomeIpAddressInfo, value);
+        }
+    }
+
     public ICommand SelectInstallDirectoryCommand { get; }
     public ICommand SubmitServerProfileSetupCommand { get; }
     public ICommand DiscardServerProfileSetupCommand { get; }
@@ -92,6 +111,7 @@ public class ServerProfileSetupViewModel : ObservableObject
         OpenAssetListCommand = new RelayCommand(OpenAssetList);
         AddWorkshopIdCommand = new AsyncRelayCommand(AddWorkshopIdAsync);
         RefreshInstalledMods = new RelayCommand(RehydrateInstalledWorkshopIds);
+        HydrateLocalIpAddresses();
         UpdateServerFileProperties();
         RehydrateInstalledWorkshopIds();
         UpdateCanSave();
@@ -111,6 +131,12 @@ public class ServerProfileSetupViewModel : ObservableObject
             RehydrateInstalledWorkshopIds();
         }
         UpdateCanSave();
+    }
+
+    private void HydrateLocalIpAddresses()
+    {
+        _localIpAddressInfos = new(IpUtility.GetLocalIPv4Addresses());
+        _selectedMultihomeIpAddressInfo = _localIpAddressInfos.FirstOrDefault(ipInfo => ipInfo.IpAddress.ToString().Equals(ServerProfile.MultihomeIp, StringComparison.OrdinalIgnoreCase));
     }
 
     private void UpdateServerFileProperties()
@@ -161,7 +187,7 @@ public class ServerProfileSetupViewModel : ObservableObject
     private async Task DownloadOrUpdateServerFilesAsync()
     {
         IsDownloadingServerFiles = true;
-        var result = await SteamCmdUtility.DownloadOrUpdateDedicatedServerAsync(ServerProfile.InstallDirectory);
+        await SteamCmdUtility.DownloadOrUpdateDedicatedServerAsync(ServerProfile.InstallDirectory);
         IsDownloadingServerFiles = false;
         UpdateServerFileProperties();
     }

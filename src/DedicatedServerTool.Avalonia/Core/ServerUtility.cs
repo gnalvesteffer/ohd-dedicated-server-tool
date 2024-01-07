@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -70,6 +71,7 @@ internal static class ServerUtility
         {
             queryParameters.Append($"?AutoAssignHuman={profile.TeamIdToAutoAssignHumans}");
         }
+        var multihomeIp = string.IsNullOrWhiteSpace(profile.MultihomeIp) ? "0.0.0.0" : profile.MultihomeIp;
 
         WriteIniAndConfigFiles(profile);
 
@@ -77,7 +79,7 @@ internal static class ServerUtility
         {
             WorkingDirectory = profile.InstallDirectory,
             FileName = Path.Combine(profile.InstallDirectory, @"HarshDoorstop\Binaries\Win64\HarshDoorstopServer-Win64-Shipping.exe"),
-            Arguments = $"{profile.InitialMapName}{queryParameters} -log -Port={profile.Port} -QueryPort={profile.QueryPort} -RCONPort={profile.RconPort} -SteamServerName=\"{profile.ServerName}\" %*"
+            Arguments = $"{profile.InitialMapName}{queryParameters} -log -Port={profile.Port} -QueryPort={profile.QueryPort} -RCONPort={profile.RconPort} -SteamServerName=\"{profile.ServerName}\" -MULTIHOME={multihomeIp} %*"
         };
 
         var useUpnpForPortForwarding = profile.ShouldUseUpnpForPortForwarding;

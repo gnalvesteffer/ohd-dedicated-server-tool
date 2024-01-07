@@ -19,6 +19,13 @@ public class ServerProfile : ObservableObject
         set => SetProperty(ref _serverName, value);
     }
 
+    private string? _multihomeIp;
+    public string? MultihomeIp
+    {
+        get => _multihomeIp;
+        set => SetProperty(ref _multihomeIp, value);
+    }
+
     private string _installDirectory = string.Empty;
     public string InstallDirectory
     {

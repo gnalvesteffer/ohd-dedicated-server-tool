@@ -55,9 +55,23 @@
                             <StackPanel Classes="form-group" Width="300" Margin="0,0,10,0" VerticalAlignment="Bottom">
                                 <TextBlock Text="Server Password" />
                                 <TextBlock Classes="info" TextWrapping="Wrap" Text="Leave blank to allow anyone to join." />
-                                <TextBox Text="{Binding ServerProfile.ServerPassword}" PasswordChar="*" Grid.Column="0" />
+                                <TextBox Text="{Binding ServerProfile.ServerPassword}" PasswordChar="*" />
                             </StackPanel>
                         </WrapPanel>
+                        <StackPanel Classes="form-group" Width="250" HorizontalAlignment="Left">
+                            <TextBlock Text="Multihome IP" />
+                            <TextBlock Classes="info" TextWrapping="Wrap" Text="If this computer has multiple IP addresses assigned directly to it, choose the local listen address to bind on. Defaults to 0.0.0.0 if left blank (uses any available address)." />
+                            <ComboBox SelectedItem="{Binding SelectedMultihomeIpAddressInfo}" ItemsSource="{Binding LocalIpAddressInfos}" Width="200">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{Binding IpAddress}" />
+                                            <TextBlock Text="{Binding NetworkInterface.Name, StringFormat=' ({0})'}" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </StackPanel>
                         <StackPanel>
                             <TextBlock Classes="form-group-header" Text="Ports" />
                             <TextBlock Classes="info" Text="Ensure that your router is configured to forward these ports to your system." />
