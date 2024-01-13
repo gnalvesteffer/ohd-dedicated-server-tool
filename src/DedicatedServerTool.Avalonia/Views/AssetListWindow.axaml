@@ -1,0 +1,39 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="using:DedicatedServerTool.Avalonia.ViewModels"
+        x:DataType="vm:AssetListViewModel"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="DedicatedServerTool.Avalonia.Views.AssetListWindow"
+        Width="640"
+        Height="480"
+        Icon="/Assets/ohd.ico"
+        Title="Asset List">
+    <TabControl>
+        <TabItem Header="Maps">
+            <ListBox ItemsSource="{Binding Maps}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel>
+                            <TextBlock Text="{Binding Description}" />
+                            <TextBox Text="{Binding Classname}" IsReadOnly="True" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </TabItem>
+        <TabItem Header="Factions">
+            <ListBox ItemsSource="{Binding Factions}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel>
+                            <TextBlock Text="{Binding Description}" />
+                            <TextBox Text="{Binding Classname}" IsReadOnly="True" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </TabItem>
+    </TabControl>
+</Window>

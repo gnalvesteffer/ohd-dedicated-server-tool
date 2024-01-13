@@ -110,6 +110,7 @@ public partial class AppViewModel : ViewModelBase
         var serverProfile = new ServerProfile
         {
             ServerName = "My OHD Server",
+            MultihomeIp = "0.0.0.0",
             Port = 7777,
             RconPort = 7779,
             QueryPort = 27005,

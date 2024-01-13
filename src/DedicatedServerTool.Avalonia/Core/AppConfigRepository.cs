@@ -4,9 +4,11 @@ using System.Text.Json;
 
 namespace DedicatedServerTool.Avalonia.Core
 {
-    internal static class AppStateRepository
+    internal static class AppConfigRepository
     {
-        private static readonly string FilePath = "appstate.json";
+        private static readonly string FilePath = "appconfig.json";
+
+        private static AppConfig? _appConfigInstance;
 
         public static void Save(AppState appState)
         {
@@ -14,12 +16,16 @@ namespace DedicatedServerTool.Avalonia.Core
             File.WriteAllText(FilePath, jsonString);
         }
 
-        public static AppState Load()
+        public static AppConfig Load()
         {
+            if (_appConfigInstance != null)
+            {
+                return _appConfigInstance;
+            }
             if (File.Exists(FilePath))
             {
                 string jsonString = File.ReadAllText(FilePath);
-                return JsonSerializer.Deserialize<AppState>(jsonString) ?? new();
+                return _appConfigInstance = JsonSerializer.Deserialize<AppConfig>(jsonString) ?? new();
             }
             return new();
         }

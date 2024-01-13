@@ -55,9 +55,23 @@
                             <StackPanel Classes="form-group" Width="300" Margin="0,0,10,0" VerticalAlignment="Bottom">
                                 <TextBlock Text="Server Password" />
                                 <TextBlock Classes="info" TextWrapping="Wrap" Text="Leave blank to allow anyone to join." />
-                                <TextBox Text="{Binding ServerProfile.ServerPassword}" PasswordChar="*" Grid.Column="0" />
+                                <TextBox Text="{Binding ServerProfile.ServerPassword}" PasswordChar="*" />
                             </StackPanel>
                         </WrapPanel>
+                        <StackPanel Classes="form-group" Width="250" HorizontalAlignment="Left">
+                            <TextBlock Text="Multihome IP" />
+                            <TextBlock Classes="info" TextWrapping="Wrap" Text="If this computer has multiple IP addresses assigned directly to it, choose the local listen address to bind on. Defaults to 0.0.0.0 if left blank (uses any available address)." />
+                            <ComboBox SelectedItem="{Binding SelectedMultihomeIpAddressInfo}" ItemsSource="{Binding LocalIpAddressInfos}" Width="200">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{Binding IpAddress}" />
+                                            <TextBlock Text="{Binding NetworkInterface.Name, StringFormat=' ({0})'}" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </StackPanel>
                         <StackPanel>
                             <TextBlock Classes="form-group-header" Text="Ports" />
                             <TextBlock Classes="info" Text="Ensure that your router is configured to forward these ports to your system." />
@@ -114,8 +128,13 @@
                     <StackPanel>
                         <StackPanel Classes="form-group">
                             <TextBlock Text="Asset Scanner" />
-                            <TextBlock Classes="info" TextWrapping="Wrap" Text="The Asset Scanner attempts to find asset info such as map names, which you can then copy into the fields below." />
+                            <TextBlock Classes="info" TextWrapping="Wrap" Text="The Asset Scanner attempts to find asset info embedded in the game and mods' .pak files, such as map and factions names, which you can then copy into the fields below. This is slow, and potentially inaccurate. It's best to consult the official documentation for the game and mods for the asset names." />
                             <Button Content="Open Asset Scanner" Command="{Binding OpenAssetScannerCommand}" />
+                        </StackPanel>
+                        <StackPanel Classes="form-group">
+                            <TextBlock Text="Asset List" />
+                            <TextBlock Classes="info" TextWrapping="Wrap" Text="Displays a list of the game's map and faction names that can be copied to the fields below. This is faster than using the Asset Scanner, but the data is hardcoded (defined in the appconfig.json)." />
+                            <Button Content="View Asset List" Command="{Binding OpenAssetListCommand}" />
                         </StackPanel>
                         <WrapPanel Classes="form-group">
                             <StackPanel Classes="form-group" Width="300" Margin="0,0,10,0" VerticalAlignment="Bottom">
@@ -161,7 +180,7 @@
                             <StackPanel Classes="form-group" Width="175" Margin="0,10,10,0" VerticalAlignment="Bottom">
                                 <TextBlock Text="Human Team ID" />
                                 <TextBlock Classes="info" TextWrapping="Wrap" Text="Forces players to be on a specific team, allowing for co-op gameplay (players vs bots). Leave blank to allow players to join any team." />
-                                <NumericUpDown Value="{Binding ServerProfile.TeamIdToAutoAssignHumans}" Minimum="0" Maximum="254" Increment="1" FormatString="0" />
+                                <NumericUpDown Value="{Binding ServerProfile.TeamIdToAutoAssignHumans}" Minimum="0" Maximum="254" Increment="1" FormatString="0" ToolTip.Tip="Usually 0=Opfor, 1=Blufor (other team numbers are reserved for gamemodes that may support more teams)." />
                             </StackPanel>
                             <StackPanel Classes="form-group" Width="175" Margin="0,10,10,0" VerticalAlignment="Bottom">
                                 <TextBlock Text="Respawn Time" />

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -71,6 +72,7 @@ internal static class ServerUtility
         {
             queryParameters.Append($"?AutoAssignHuman={profile.TeamIdToAutoAssignHumans}");
         }
+        var multihomeIp = string.IsNullOrWhiteSpace(profile.MultihomeIp) ? "0.0.0.0" : profile.MultihomeIp;
 
         WriteIniAndConfigFiles(profile);
 
@@ -78,7 +80,7 @@ internal static class ServerUtility
         {
             WorkingDirectory = profile.InstallDirectory,
             FileName = Path.Combine(profile.InstallDirectory, @"HarshDoorstop\Binaries\Win64\HarshDoorstopServer-Win64-Shipping.exe"),
-            Arguments = $"{profile.InitialMapName}{queryParameters} -log -Port={profile.Port} -QueryPort={profile.QueryPort} -RCONPort={profile.RconPort} -SteamServerName=\"{profile.ServerName}\" %*"
+            Arguments = $"{profile.InitialMapName}{queryParameters} -log -Port={profile.Port} -QueryPort={profile.QueryPort} -RCONPort={profile.RconPort} -SteamServerName=\"{profile.ServerName}\" -MULTIHOME={multihomeIp} %*"
         };
 
         var useUpnpForPortForwarding = profile.ShouldUseUpnpForPortForwarding;
@@ -91,8 +93,7 @@ internal static class ServerUtility
             }
 
             do
-            {
-                
+            {   
                 using Process process = new Process { StartInfo = startInfo };
                 Thread modCheckTask = new Thread(async () => await CheckForOutOfDateProfileModsAsync(profile, process));
                 process.Start();
@@ -100,6 +101,30 @@ internal static class ServerUtility
                 if (profile.ShouldAutoUpdateMods)
                 {
                     modCheckTask.Start();
+                }
+              
+                if (profile.ShouldUpdateBeforeStarting)
+                {
+                    await UpdateServerAndModsAsync(profile);
+                }
+
+                var isRestarting = false;
+                using Process process = new() { StartInfo = startInfo };
+                process.Start();
+
+                var tasks = new List<Task>
+                {
+                    process.WaitForExitAsync()
+                };
+                if (profile.RestartIntervalHours > 0)
+                {
+                    tasks.Add(Task.Delay(TimeSpan.FromHours(profile.RestartIntervalHours.Value)).ContinueWith(_ => isRestarting = true));
+                }
+                await Task.WhenAny(tasks); // wait for either the server to crash or to restart
+
+                if (!process.HasExited)
+                {
+                    process.CloseMainWindow();
                 }
 
                 await process.WaitForExitAsync();
@@ -128,7 +153,12 @@ internal static class ServerUtility
 
                     await Task.WhenAll(updateModsTask);
                 }
-            } while (profile.ShouldRestartOnCrash || profile.ShouldAutoUpdateMods);
+              
+                if (!isRestarting && CleanExitCodes.Contains(process.ExitCode))
+                {
+                    break;
+                }
+            } while (profile.ShouldRestartOnCrash || profile.RestartIntervalHours.HasValue);
         }
         catch (MappingException exception)
         {
@@ -201,6 +231,20 @@ internal static class ServerUtility
         return false;
     }
 
+    public static Task UpdateServerAndModsAsync(ServerProfile serverProfile)
+    {
+        var updateServerTask = SteamCmdUtility.DownloadOrUpdateDedicatedServerAsync(serverProfile.InstallDirectory);
+        var updateModsTask = Parallel.ForEachAsync(serverProfile.GetInstalledWorkshopIds(), async (workshopId, cancellationToken) =>
+        {
+            if (cancellationToken.IsCancellationRequested)
+            {
+                return;
+            }
+            await SteamCmdUtility.DownloadOrUpdateModAsync(serverProfile.InstallDirectory, workshopId);
+        });
+        return Task.WhenAll(updateServerTask, updateModsTask);
+    }
+
     private static void WriteIniAndConfigFiles(ServerProfile profile)
     {
         WriteGameIni(profile);
@@ -251,5 +295,4 @@ internal static class ServerUtility
         Directory.CreateDirectory(Path.GetDirectoryName(adminsConfigPath)!);
         File.WriteAllText(adminsConfigPath, stringBuilder.ToString());
     }
-
 }

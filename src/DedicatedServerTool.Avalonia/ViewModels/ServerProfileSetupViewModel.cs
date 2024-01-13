@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.Input;
 using DedicatedServerTool.Avalonia.Core;
 using DedicatedServerTool.Avalonia.Models;
 using DedicatedServerTool.Avalonia.Views;
+using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
@@ -71,11 +72,30 @@ public class ServerProfileSetupViewModel : ObservableObject
         set => SetProperty(ref _canSave, value);
     }
 
+    private ObservableCollection<IpAddressInfo> _localIpAddressInfos = new();
+    public ObservableCollection<IpAddressInfo> LocalIpAddressInfos
+    {
+        get => _localIpAddressInfos;
+        set => SetProperty(ref _localIpAddressInfos, value);
+    }
+
+    private IpAddressInfo? _selectedMultihomeIpAddressInfo;
+    public IpAddressInfo? SelectedMultihomeIpAddressInfo
+    {
+        get => _selectedMultihomeIpAddressInfo;
+        set
+        {
+            ServerProfile.MultihomeIp = value?.IpAddress.ToString();
+            SetProperty(ref _selectedMultihomeIpAddressInfo, value);
+        }
+    }
+
     public ICommand SelectInstallDirectoryCommand { get; }
     public ICommand SubmitServerProfileSetupCommand { get; }
     public ICommand DiscardServerProfileSetupCommand { get; }
     public ICommand DownloadServerFilesCommand { get; }
     public ICommand OpenAssetScannerCommand { get; }
+    public ICommand OpenAssetListCommand { get; }
     public ICommand AddWorkshopIdCommand { get; }
     public ICommand RefreshInstalledMods { get; }
 
@@ -88,8 +108,10 @@ public class ServerProfileSetupViewModel : ObservableObject
         DiscardServerProfileSetupCommand = onDiscardServerProfile;
         DownloadServerFilesCommand = new AsyncRelayCommand(DownloadOrUpdateServerFilesAsync);
         OpenAssetScannerCommand = new RelayCommand(OpenAssetScanner);
+        OpenAssetListCommand = new RelayCommand(OpenAssetList);
         AddWorkshopIdCommand = new AsyncRelayCommand(AddWorkshopIdAsync);
         RefreshInstalledMods = new RelayCommand(RehydrateInstalledWorkshopIds);
+        HydrateLocalIpAddresses();
         UpdateServerFileProperties();
         RehydrateInstalledWorkshopIds();
         UpdateCanSave();
@@ -111,6 +133,12 @@ public class ServerProfileSetupViewModel : ObservableObject
         UpdateCanSave();
     }
 
+    private void HydrateLocalIpAddresses()
+    {
+        _localIpAddressInfos = new(IpUtility.GetLocalIPv4Addresses());
+        _selectedMultihomeIpAddressInfo = _localIpAddressInfos.FirstOrDefault(ipInfo => ipInfo.IpAddress.ToString().Equals(ServerProfile.MultihomeIp, StringComparison.OrdinalIgnoreCase));
+    }
+
     private void UpdateServerFileProperties()
     {
         AreServerFilesInstalled = File.Exists(Path.Combine(ServerProfile.InstallDirectory ?? string.Empty, @"HarshDoorstop\Binaries\Win64\HarshDoorstopServer-Win64-Shipping.exe"));
@@ -120,8 +148,8 @@ public class ServerProfileSetupViewModel : ObservableObject
 
     private void UpdateCanSave()
     {
-        CanSave = 
-            AreServerFilesInstalled && 
+        CanSave =
+            AreServerFilesInstalled &&
             !string.IsNullOrWhiteSpace(ServerProfile.ServerName) &&
             ServerProfile.Port.HasValue &&
             ServerProfile.ClientPort.HasValue &&
@@ -159,7 +187,7 @@ public class ServerProfileSetupViewModel : ObservableObject
     private async Task DownloadOrUpdateServerFilesAsync()
     {
         IsDownloadingServerFiles = true;
-        var result = await SteamCmdUtility.DownloadOrUpdateDedicatedServerAsync(ServerProfile.InstallDirectory);
+        await SteamCmdUtility.DownloadOrUpdateDedicatedServerAsync(ServerProfile.InstallDirectory);
         IsDownloadingServerFiles = false;
         UpdateServerFileProperties();
     }
@@ -168,6 +196,12 @@ public class ServerProfileSetupViewModel : ObservableObject
     {
         var scanWindow = new PakScanWindow(ServerProfile);
         scanWindow.Show();
+    }
+
+    private void OpenAssetList()
+    {
+        var assetListWindow = new AssetListWindow();
+        assetListWindow.Show();
     }
 
     private async Task AddWorkshopIdAsync()

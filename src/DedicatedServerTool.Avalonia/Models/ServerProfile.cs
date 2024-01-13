@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using DedicatedServerTool.Avalonia.Core;
+using System;
 using System.Collections.Generic;
 
 namespace DedicatedServerTool.Avalonia.Models;
@@ -17,6 +18,13 @@ public class ServerProfile : ObservableObject
     {
         get => _serverName;
         set => SetProperty(ref _serverName, value);
+    }
+
+    private string? _multihomeIp;
+    public string? MultihomeIp
+    {
+        get => _multihomeIp;
+        set => SetProperty(ref _multihomeIp, value);
     }
 
     private string _installDirectory = string.Empty;
@@ -231,6 +239,14 @@ public class ServerProfile : ObservableObject
     {
         get => _shouldAutoUpdateMods;
         set => SetProperty(ref _shouldAutoUpdateMods, value);
+    }
+    
+    
+    private double? _restartIntervalHours;
+    public double? RestartIntervalHours
+    {
+        get => _restartIntervalHours;
+        set => SetProperty(ref _restartIntervalHours, value);
     }
 
     public IEnumerable<long> GetInstalledWorkshopIds()

@@ -7,8 +7,8 @@
         x:Class="DedicatedServerTool.Avalonia.Views.MainWindow"
         x:DataType="vm:AppViewModel"
         mc:Ignorable="d" d:DesignWidth="1024" d:DesignHeight="768"
-        Width="1024"
-        Height="768"
+        Width="1100"
+        Height="720"
         Icon="/Assets/ohd.ico"
         Title="{Binding AppTitle}">
 

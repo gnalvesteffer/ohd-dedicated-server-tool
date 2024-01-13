@@ -27,10 +27,19 @@
                         <StackPanel>
                             <TextBlock Classes="form-group-header" Text="Startup Options" />
                             <CheckBox Content="Update server files and mods before starting" IsChecked="{Binding ServerProfile.ShouldUpdateBeforeStarting}" ToolTip.Tip="Automatically updates the server files and mods before starting the server. Same behavior as pressing the Update Server button before starting the server." />
-							<CheckBox Content="Restart if mods are out of date" IsChecked="{Binding ServerProfile.ShouldAutoUpdateMods}" ToolTip.Tip="Whether or not to call for mod updates periodically and restart the server if mods have been updated on the workshop."></CheckBox>
-							<CheckBox Content="Restart server on crash" IsChecked="{Binding ServerProfile.ShouldRestartOnCrash}" ToolTip.Tip="Automatically restarts the server if it crashes. This can be toggled while the server is running, and take effect." />
+							              <CheckBox Content="Restart if mods are out of date" IsChecked="{Binding ServerProfile.ShouldAutoUpdateMods}" ToolTip.Tip="Whether or not to call for mod updates periodically and restart the server if mods have been updated on the workshop."></CheckBox>
+
                             <CheckBox Content="Auto-configure Port Forwarding via uPnP" IsChecked="{Binding ServerProfile.ShouldUseUpnpForPortForwarding}" ToolTip.Tip="When enabled, attempts to automatically configure port forwarding via uPnP when the server starts, and cleans them up when the server stops. (Only available on supported routers)" />
-						</StackPanel>
+                            <CheckBox Content="Restart server on crash" IsChecked="{Binding ServerProfile.ShouldRestartOnCrash}" ToolTip.Tip="Automatically restarts the server if it crashes. This can be toggled while the server is running, and take effect." />
+                            <StackPanel Classes="form-group" Margin="0,10">
+                                <TextBlock Text="Restart Interval" />
+                                <TextBlock Classes="info" Text="Restarts the server at the specified interval, e.g. if a restart interval of 0.5 hours is chosen, then the server will restart every 30 minutes. This will respect the 'Update server files and mods before starting' option and perform an update before restarting the server. Leave blank to disable this feature." TextWrapping="Wrap" />
+                                <StackPanel Orientation="Horizontal">
+                                    <NumericUpDown Width="150" VerticalAlignment="Center" Value="{Binding ServerProfile.RestartIntervalHours}" Minimum="0" Increment="1" FormatString="0.00" />
+                                    <TextBlock VerticalAlignment="Center" Margin="10,0,0,0" Text="Hours" />
+                                </StackPanel>
+                            </StackPanel>
+                        </StackPanel>
                     </StackPanel>
                 </Border>
             </StackPanel>
