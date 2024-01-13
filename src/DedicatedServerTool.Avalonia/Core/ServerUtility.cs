@@ -155,6 +155,18 @@ internal static class ServerUtility
             {
                 if (!process.HasExited)
                 {
+                    var updateModsTask = Parallel.ForEachAsync(profile.GetInstalledWorkshopIds(), async (workshopId, cancellationToken) =>
+                    {
+                        if (cancellationToken.IsCancellationRequested)
+                        {
+                            return;
+                        }
+
+                        await SteamCmdUtility.DownloadOrUpdateModAsync(profile.InstallDirectory, workshopId);
+                    });
+
+                    await Task.WhenAll(updateModsTask);
+
                     bool hasOutOfDateMods = await PofileHasOutOfDateModsAsync(profile);
 
                     if (hasOutOfDateMods)
@@ -179,22 +191,7 @@ internal static class ServerUtility
         try
         {
             //DateTime modLastUpdated = await InstalledWorkshopModUtility.ScrapeWorkshopItemLastUpdated(3127339017);
-            
-            foreach(long modId in profile.GetInstalledWorkshopIds())
-            {
-                try
-                {
-                    if (await InstalledWorkshopModUtility.IsModOutOfDate(profile.InstallDirectory, modId))
-                    {
-                        return true;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex);
-                }
-            }
-
+            return await InstalledWorkshopModUtility.HasOutOfDateModsAsync(profile.InstallDirectory);
         }
         catch (Exception ex)
         {
