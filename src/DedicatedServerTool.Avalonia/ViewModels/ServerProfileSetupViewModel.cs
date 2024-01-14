@@ -166,6 +166,7 @@ public class ServerProfileSetupViewModel : ObservableObject
             return;
         }
         ServerProfile.IsSetUp = true;
+        ServerUtility.WriteIniAndConfigFiles(ServerProfile);
     }
 
     private async Task SelectInstallDirectoryAsync()
