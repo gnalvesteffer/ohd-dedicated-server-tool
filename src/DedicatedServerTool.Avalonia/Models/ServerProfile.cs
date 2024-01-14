@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using DedicatedServerTool.Avalonia.Core;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
 using System.Collections.Generic;
 
@@ -247,6 +248,11 @@ public class ServerProfile : ObservableObject
     {
         get => _restartIntervalHours;
         set => SetProperty(ref _restartIntervalHours, value);
+    }
+
+    public String HasRestartInterval
+    {
+        get => "True";//(_restartIntervalHours.HasValue && _restartIntervalHours > 0.00).ToString();
     }
 
     public IEnumerable<long> GetInstalledWorkshopIds()

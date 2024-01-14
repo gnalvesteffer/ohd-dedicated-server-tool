@@ -27,8 +27,6 @@
                         <StackPanel>
                             <TextBlock Classes="form-group-header" Text="Startup Options" />
                             <CheckBox Content="Update server files and mods before starting" IsChecked="{Binding ServerProfile.ShouldUpdateBeforeStarting}" ToolTip.Tip="Automatically updates the server files and mods before starting the server. Same behavior as pressing the Update Server button before starting the server." />
-							              <CheckBox Content="Restart if mods are out of date" IsChecked="{Binding ServerProfile.ShouldAutoUpdateMods}" ToolTip.Tip="Whether or not to call for mod updates periodically and restart the server if mods have been updated on the workshop."></CheckBox>
-
                             <CheckBox Content="Auto-configure Port Forwarding via uPnP" IsChecked="{Binding ServerProfile.ShouldUseUpnpForPortForwarding}" ToolTip.Tip="When enabled, attempts to automatically configure port forwarding via uPnP when the server starts, and cleans them up when the server stops. (Only available on supported routers)" />
                             <CheckBox Content="Restart server on crash" IsChecked="{Binding ServerProfile.ShouldRestartOnCrash}" ToolTip.Tip="Automatically restarts the server if it crashes. This can be toggled while the server is running, and take effect." />
                             <StackPanel Classes="form-group" Margin="0,10">
@@ -38,7 +36,9 @@
                                     <NumericUpDown Width="150" VerticalAlignment="Center" Value="{Binding ServerProfile.RestartIntervalHours}" Minimum="0" Increment="1" FormatString="0.00" />
                                     <TextBlock VerticalAlignment="Center" Margin="10,0,0,0" Text="Hours" />
                                 </StackPanel>
-                            </StackPanel>
+								<CheckBox Content="Only restart if mods are out of date" IsEnabled="{Binding ServerProfile.HasRestartInterval}" IsChecked="{Binding ServerProfile.ShouldAutoUpdateMods}" ToolTip.Tip="Whether or not to call for mod updates periodically and restart the server if mods have been updated on the workshop. (Overrides restart interval)">
+								</CheckBox>
+							</StackPanel>
                         </StackPanel>
                     </StackPanel>
                 </Border>

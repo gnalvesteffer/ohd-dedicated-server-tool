@@ -58,7 +58,7 @@ namespace DedicatedServerTool.Avalonia.Core
 
                ACF_Struct modsFileStruct = acfReader.ACFFileToStruct();
 
-               return (int.Parse(modsFileStruct.SubACF["AppWorkShop"].SubItems["NeedsUpdate"])) > 0;
+               return (int.Parse(modsFileStruct.SubACF["AppWorkshop"].SubItems["NeedsUpdate"])) > 0;
             } catch (Exception e)
             {
                 return false;

@@ -97,8 +97,9 @@ internal static class ServerUtility
                 using Process process = new Process { StartInfo = startInfo };
                 Thread modCheckTask = new Thread(async () => await CheckForOutOfDateProfileModsAsync(profile, process));
                 process.Start();
+                var isRestarting = false;
 
-                if (profile.ShouldAutoUpdateMods)
+                if (profile.ShouldAutoUpdateMods && profile.RestartIntervalHours.HasValue)
                 {
                     modCheckTask.Start();
                 }
@@ -107,16 +108,12 @@ internal static class ServerUtility
                 {
                     await UpdateServerAndModsAsync(profile);
                 }
-
-                var isRestarting = false;
-                using Process process = new() { StartInfo = startInfo };
-                process.Start();
-
+ 
                 var tasks = new List<Task>
                 {
                     process.WaitForExitAsync()
                 };
-                if (profile.RestartIntervalHours > 0)
+                if (profile.RestartIntervalHours > 0 && !profile.ShouldAutoUpdateMods)
                 {
                     tasks.Add(Task.Delay(TimeSpan.FromHours(profile.RestartIntervalHours.Value)).ContinueWith(_ => isRestarting = true));
                 }
@@ -128,17 +125,8 @@ internal static class ServerUtility
                 }
 
                 await process.WaitForExitAsync();
-
-                if (CleanExitCodes.Contains(process.ExitCode))
-                {
-                    break;
-                }
-                else if (!profile.ShouldRestartOnCrash && !profile.ShouldAutoUpdateMods)
-                {
-                    break; // allow server to crash if should restart setting isn't enabled
-                }
                 
-                if (profile.ShouldAutoUpdateMods)
+                if (profile.ShouldAutoUpdateMods && profile.RestartIntervalHours.HasValue)
                 {
 
                     var updateModsTask = Parallel.ForEachAsync(profile.GetInstalledWorkshopIds(), async (workshopId, cancellationToken) =>
@@ -158,6 +146,11 @@ internal static class ServerUtility
                 {
                     break;
                 }
+                else if (!profile.ShouldRestartOnCrash && !profile.ShouldAutoUpdateMods)
+                {
+                    break; // allow server to crash if should restart setting isn't enabled
+                }
+
             } while (profile.ShouldRestartOnCrash || profile.RestartIntervalHours.HasValue);
         }
         catch (MappingException exception)
@@ -179,7 +172,7 @@ internal static class ServerUtility
     {
         while (true)
         {
-            Thread.Sleep((1000 * 5));
+            Thread.Sleep((int)((1000 * 60 * 60) * profile.RestartIntervalHours));
             process.Refresh();
             try
             {
