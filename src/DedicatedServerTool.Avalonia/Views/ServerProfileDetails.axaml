@@ -36,7 +36,9 @@
                                     <NumericUpDown Width="150" VerticalAlignment="Center" Value="{Binding ServerProfile.RestartIntervalHours}" Minimum="0" Increment="1" FormatString="0.00" />
                                     <TextBlock VerticalAlignment="Center" Margin="10,0,0,0" Text="Hours" />
                                 </StackPanel>
-                            </StackPanel>
+								<CheckBox Content="Only restart if mods are out of date" IsEnabled="{Binding ServerProfile.HasRestartInterval}" IsChecked="{Binding ServerProfile.ShouldAutoUpdateMods}" ToolTip.Tip="Whether or not to call for mod updates periodically and restart the server if mods have been updated on the workshop. (Overrides restart interval)">
+								</CheckBox>
+							</StackPanel>
                         </StackPanel>
                     </StackPanel>
                 </Border>
@@ -46,7 +48,7 @@
                 <Button Classes="accent" Content="Start Server" Command="{Binding StartServerCommand}" HorizontalAlignment="Left" Margin="0,0,5,0" />
                 <WrapPanel HorizontalAlignment="Right">
                     <Button Content="Update Server and Mods" ToolTip.Tip="Updates the server files and mods. This can take a while." Command="{Binding UpdateServerAndModsCommand}" Margin="0,0,5,0" />
-                    <Button Content="Edit Profile" Command="{Binding EditServerProfileCommand}" />
+					<Button Content="Edit Profile" Command="{Binding EditServerProfileCommand}" />
                 </WrapPanel>
             </Grid>
         </StackPanel>

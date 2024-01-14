@@ -234,11 +234,24 @@ public class ServerProfile : ObservableObject
         set => SetProperty(ref _shouldUseUpnpForPortForwarding, value);
     }
 
+    private bool _shouldAutoUpdateMods;
+    public bool ShouldAutoUpdateMods
+    {
+        get => _shouldAutoUpdateMods;
+        set => SetProperty(ref _shouldAutoUpdateMods, value);
+    }
+    
+    
     private double? _restartIntervalHours;
     public double? RestartIntervalHours
     {
         get => _restartIntervalHours;
         set => SetProperty(ref _restartIntervalHours, value);
+    }
+
+    public String HasRestartInterval
+    {
+        get => "True";//(_restartIntervalHours.HasValue && _restartIntervalHours > 0.00).ToString();
     }
 
     public IEnumerable<long> GetInstalledWorkshopIds()

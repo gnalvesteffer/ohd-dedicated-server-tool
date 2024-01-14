@@ -1,9 +1,12 @@
-﻿using HtmlAgilityPack;
+﻿using DedicatedServerTool.Avalonia.Models;
+using DedicatedServerTool.Avalonia.Views;
+using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -42,6 +45,24 @@ namespace DedicatedServerTool.Avalonia.Core
                 }
             }
             return workshopIds;
+        }
+
+        internal static async Task<bool> HasOutOfDateModsAsync(string serverInstallDirectory)
+        {
+            try
+            {
+                //profile.InstallDirectory
+               var workshopModsFile = Path.Combine(serverInstallDirectory, @$"steamapps\workshop\appworkshop_736590.acf");
+
+               ACFReader acfReader = new ACFReader(workshopModsFile);
+
+               ACF_Struct modsFileStruct = acfReader.ACFFileToStruct();
+
+               return (int.Parse(modsFileStruct.SubACF["AppWorkshop"].SubItems["NeedsUpdate"])) > 0;
+            } catch (Exception e)
+            {
+                return false;
+            }
         }
 
         internal static void OpenWorkshopPage(long workshopId)
