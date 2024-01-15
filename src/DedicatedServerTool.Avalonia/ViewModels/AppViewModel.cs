@@ -108,20 +108,7 @@ public partial class AppViewModel : ViewModelBase
 
     private void CreateServerProfile()
     {
-        var serverProfile = new ServerProfile
-        {
-            ServerName = "My OHD Server",
-            MultihomeIp = "0.0.0.0",
-            Port = 7777,
-            RconPort = 7779,
-            QueryPort = 27005,
-            MinPlayers = 1,
-            MaxPlayers = 16,
-            IsAutoBalanceEnabled = true,
-            InitialMapName = "Risala",
-            MapCycleText = "Argonne\nMontecassino\nLamDong\nKhafji_P\nRisala",
-        };
-
+        var serverProfile = new ServerProfile();
         ServerProfiles.Add(serverProfile);
         SelectedServerProfile = serverProfile;
     }

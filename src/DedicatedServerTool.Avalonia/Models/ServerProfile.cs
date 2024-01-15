@@ -1,6 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using DedicatedServerTool.Avalonia.Core;
-using System;
 using System.Collections.Generic;
 
 namespace DedicatedServerTool.Avalonia.Models;
@@ -150,7 +149,7 @@ public class ServerProfile : ObservableObject
         set => SetProperty(ref _rconPort, value);
     }
 
-    private string _serverPassword = string.Empty;
+    private string _serverPassword;
     public string ServerPassword
     {
         get => _serverPassword;
@@ -178,7 +177,7 @@ public class ServerProfile : ObservableObject
         set => SetProperty(ref _shouldDisableKitRestrictions, value);
     }
 
-    private string _mapCycleText = string.Empty;
+    private string _mapCycleText;
     public string MapCycleText
     {
         get => _mapCycleText;
@@ -248,32 +247,50 @@ public class ServerProfile : ObservableObject
         set => SetProperty(ref _isVoteKickingEnabled, value);
     }
 
-    private int _voteKickBanDurationSeconds = 300;
+    private int _voteKickBanDurationSeconds;
     public int VoteKickBanDurationSeconds
     {
         get => _voteKickBanDurationSeconds;
         set => SetProperty(ref _voteKickBanDurationSeconds, value);
     }
 
-    private float _voteKickPassRatio = 0.51f;
+    private float _voteKickPassRatio;
     public float VoteKickPassRatio
     {
         get => _voteKickPassRatio;
         set => SetProperty(ref _voteKickPassRatio, value);
     }
 
-    private int _voteKickPollDurationSeconds = 60;
+    private int _voteKickPollDurationSeconds;
     public int VoteKickPollDurationSeconds
     {
         get => _voteKickPollDurationSeconds;
         set => SetProperty(ref _voteKickPollDurationSeconds, value);
     }
 
-    private int _voteKickCooldownSeconds = 30;
+    private int _voteKickCooldownSeconds;
     public int VoteKickCooldownSeconds
     {
         get => _voteKickCooldownSeconds;
         set => SetProperty(ref _voteKickCooldownSeconds, value);
+    }
+
+    public ServerProfile()
+    {
+        ServerName = "My OHD Server";
+        MultihomeIp = "0.0.0.0";
+        Port = 7777;
+        QueryPort = 27005;
+        RconPort = 7779;
+        MinPlayers = 1;
+        MaxPlayers = 16;
+        IsAutoBalanceEnabled = true;
+        InitialMapName = "Risala";
+        MapCycleText = "Argonne\nMontecassino\nLamDong\nKhafji_P\nRisala";
+        VoteKickBanDurationSeconds = 300;
+        VoteKickPassRatio = 0.51f;
+        VoteKickPollDurationSeconds = 60;
+        VoteKickCooldownSeconds = 30;
     }
 
     public IEnumerable<long> GetInstalledWorkshopIds()
