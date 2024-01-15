@@ -92,9 +92,12 @@ internal static class PakScanUtility
 
         return Task.WhenAll(matches.Cast<Match>().Select(async match =>
         {
-            cancellationToken.ThrowIfCancellationRequested();
-            var assetName = match.Value;
-            assetNames.Add(assetName);
+            await Task.Run(() =>
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                var assetName = match.Value;
+                assetNames.Add(assetName);
+            });
         }));
     }
 

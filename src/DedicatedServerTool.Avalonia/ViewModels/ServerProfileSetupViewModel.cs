@@ -14,6 +14,8 @@ using System.Windows.Input;
 namespace DedicatedServerTool.Avalonia.ViewModels;
 public class ServerProfileSetupViewModel : ObservableObject
 {
+    private readonly Action _onSave;
+
     public TopLevel? TopLevel;
 
     private ServerProfile _serverProfile;
@@ -91,7 +93,7 @@ public class ServerProfileSetupViewModel : ObservableObject
     }
 
     public ICommand SelectInstallDirectoryCommand { get; }
-    public ICommand SubmitServerProfileSetupCommand { get; }
+    public ICommand SaveServerProfileCommand { get; }
     public ICommand DiscardServerProfileSetupCommand { get; }
     public ICommand DownloadServerFilesCommand { get; }
     public ICommand OpenAssetScannerCommand { get; }
@@ -99,13 +101,14 @@ public class ServerProfileSetupViewModel : ObservableObject
     public ICommand AddWorkshopIdCommand { get; }
     public ICommand RefreshInstalledMods { get; }
 
-    public ServerProfileSetupViewModel(ServerProfile serverProfile, ICommand onDiscardServerProfile)
+    public ServerProfileSetupViewModel(ServerProfile serverProfile, Action onDiscardServerProfile, Action onSave)
     {
         _serverProfile = serverProfile;
         _serverProfile.PropertyChanged += _serverProfile_PropertyChanged;
+        _onSave = onSave;
         SelectInstallDirectoryCommand = new AsyncRelayCommand(SelectInstallDirectoryAsync);
-        SubmitServerProfileSetupCommand = new RelayCommand(SubmitServerProfileSetup);
-        DiscardServerProfileSetupCommand = onDiscardServerProfile;
+        SaveServerProfileCommand = new RelayCommand(SaveServerProfile);
+        DiscardServerProfileSetupCommand = new RelayCommand(onDiscardServerProfile);
         DownloadServerFilesCommand = new AsyncRelayCommand(DownloadOrUpdateServerFilesAsync);
         OpenAssetScannerCommand = new RelayCommand(OpenAssetScanner);
         OpenAssetListCommand = new RelayCommand(OpenAssetList);
@@ -159,7 +162,7 @@ public class ServerProfileSetupViewModel : ObservableObject
             ServerProfile.MaxPlayers.HasValue;
     }
 
-    private void SubmitServerProfileSetup()
+    private void SaveServerProfile()
     {
         if (!CanSave)
         {
@@ -167,6 +170,7 @@ public class ServerProfileSetupViewModel : ObservableObject
         }
         ServerProfile.IsSetUp = true;
         ServerUtility.WriteIniAndConfigFiles(ServerProfile);
+        _onSave();
     }
 
     private async Task SelectInstallDirectoryAsync()

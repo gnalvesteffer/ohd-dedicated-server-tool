@@ -7,7 +7,7 @@
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
         <ApplicationIcon>Assets\ohd.ico</ApplicationIcon>
-        <Version>0.6.0</Version>
+        <Version>0.7.0</Version>
         <PublishTrimmed>true</PublishTrimmed>
         <Platforms>x64</Platforms>
     </PropertyGroup>

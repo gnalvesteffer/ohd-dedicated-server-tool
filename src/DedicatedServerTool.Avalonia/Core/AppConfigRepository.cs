@@ -10,12 +10,6 @@ namespace DedicatedServerTool.Avalonia.Core
 
         private static AppConfig? _appConfigInstance;
 
-        public static void Save(AppState appState)
-        {
-            string jsonString = JsonSerializer.Serialize(appState);
-            File.WriteAllText(FilePath, jsonString);
-        }
-
         public static AppConfig Load()
         {
             if (_appConfigInstance != null)

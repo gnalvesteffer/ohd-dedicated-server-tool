@@ -6,6 +6,7 @@ using System.Windows.Input;
 using Avalonia.Controls;
 using DedicatedServerTool.Avalonia.Models;
 using System.Reflection;
+using System;
 
 namespace DedicatedServerTool.Avalonia.ViewModels;
 
@@ -50,7 +51,7 @@ public partial class AppViewModel : ViewModelBase
                 IsServerProfileSelected = value != null;
                 if (SelectedServerProfile != null)
                 {
-                    ServerProfileSetupViewModel = new(SelectedServerProfile, DeleteServerProfileSetupCommand);
+                    ServerProfileSetupViewModel = new(SelectedServerProfile, () => DeleteServerProfileSetupCommand.Execute(null), () => SaveAppStateCommand.Execute(null));
                     ServerProfileSetupViewModel.TopLevel = TopLevel;
                     ServerProfileDetailsViewModel = new(SelectedServerProfile);
                     ServerProfileDetailsViewModel.TopLevel = TopLevel;
