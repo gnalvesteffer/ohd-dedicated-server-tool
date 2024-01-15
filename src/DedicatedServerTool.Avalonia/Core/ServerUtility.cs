@@ -165,6 +165,16 @@ internal static class ServerUtility
     {
         var gameIniContents = new StringBuilder();
 
+        gameIniContents.AppendLine("[/Script/DonkehFramework.DFBaseGameMode]");
+        gameIniContents.AppendLine($"bAllowVoting={profile.IsVoteKickingEnabled}");
+
+        gameIniContents.AppendLine("[/Script/DonkehFramework.DFVoteIssuePlayerKick]");
+        gameIniContents.AppendLine($"BanDuration={profile.VoteKickBanDurationSeconds}");
+        gameIniContents.AppendLine($"PassRatio={profile.VoteKickPassRatio}");
+        gameIniContents.AppendLine($"Duration={profile.VoteKickPollDurationSeconds}");
+        gameIniContents.AppendLine($"PassedVoteCooldown={profile.VoteKickCooldownSeconds}");
+        gameIniContents.AppendLine($"FailedVoteCooldown={profile.VoteKickCooldownSeconds}");
+
         var gameIniPath = Path.Combine(profile.InstallDirectory, @"HarshDoorstop\Saved\Config\WindowsServer\Game.ini");
         Directory.CreateDirectory(Path.GetDirectoryName(gameIniPath)!);
         File.WriteAllText(gameIniPath, gameIniContents.ToString());

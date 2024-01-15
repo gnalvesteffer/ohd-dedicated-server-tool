@@ -120,6 +120,31 @@
                             <TextBlock Classes="info" TextWrapping="Wrap" Text="Enter the SteamID64 of each player that you want to have admin privileges, placing each SteamID64 on a new line in the textbox below." />
                             <TextBox Text="{Binding ServerProfile.AdminSteamIdsText}" AcceptsReturn="True" Height="200" />
                         </StackPanel>
+                        <StackPanel Classes="form-group" VerticalAlignment="Bottom">
+                            <CheckBox Content="Enable Vote-Kicking" ToolTip.Tip="When enabled, players will be able to initiate vote-kicks against other players." IsChecked="{Binding ServerProfile.IsVoteKickingEnabled}" />
+                            <WrapPanel Orientation="Horizontal" IsVisible="{Binding ServerProfile.IsVoteKickingEnabled}">
+                                <StackPanel Classes="form-group" Width="175" Margin="5" VerticalAlignment="Bottom">
+                                    <TextBlock Text="Poll Duration" />
+                                    <TextBlock Classes="info" TextWrapping="Wrap" Text="The number of seconds that the poll is to remain active." />
+                                    <NumericUpDown Value="{Binding ServerProfile.VoteKickPollDurationSeconds}" Minimum="5" Maximum="300" Increment="1" FormatString="0" />
+                                </StackPanel>
+                                <StackPanel Classes="form-group" Width="175" Margin="5" VerticalAlignment="Bottom">
+                                    <TextBlock Text="Poll Cooldown" />
+                                    <TextBlock Classes="info" TextWrapping="Wrap" Text="The number of seconds that players will be unable to initiate vote-kicks after a previous one." />
+                                    <NumericUpDown Value="{Binding ServerProfile.VoteKickPassRatio}" Minimum="0" Maximum="1800" Increment="1" FormatString="0" />
+                                </StackPanel>
+                                <StackPanel Classes="form-group" Width="175" Margin="5" VerticalAlignment="Bottom">
+                                    <TextBlock Text="Kick Duration" />
+                                    <TextBlock Classes="info" TextWrapping="Wrap" Text="The duration in seconds that a vote-kicked player will be unable to rejoin the server." />
+                                    <NumericUpDown Value="{Binding ServerProfile.VoteKickBanDurationSeconds}" Minimum="1" Maximum="86400" Increment="1" FormatString="0" />
+                                </StackPanel>
+                                <StackPanel Classes="form-group" Width="175" Margin="5" VerticalAlignment="Bottom">
+                                    <TextBlock Text="Pass Ratio" />
+                                    <TextBlock Classes="info" TextWrapping="Wrap" Text="The ratio of yes votes required to result in the votekick to pass." />
+                                    <NumericUpDown Value="{Binding ServerProfile.VoteKickPassRatio}" Minimum="0" Maximum="1" Increment="0.01" FormatString="0.00" ToolTip.Tip="Example: 0.5 requires half of the server to vote yes to result in the player to get kicked; 0.25 requires a quarter of the server to vote yes." />
+                                </StackPanel>
+                            </WrapPanel>
+                        </StackPanel>
                     </StackPanel>
                 </ScrollViewer>
             </TabItem>

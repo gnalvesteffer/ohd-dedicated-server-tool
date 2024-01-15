@@ -241,6 +241,41 @@ public class ServerProfile : ObservableObject
         set => SetProperty(ref _restartIntervalHours, value);
     }
 
+    private bool _isVoteKickingEnabled;
+    public bool IsVoteKickingEnabled
+    {
+        get => _isVoteKickingEnabled;
+        set => SetProperty(ref _isVoteKickingEnabled, value);
+    }
+
+    private int _voteKickBanDurationSeconds = 300;
+    public int VoteKickBanDurationSeconds
+    {
+        get => _voteKickBanDurationSeconds;
+        set => SetProperty(ref _voteKickBanDurationSeconds, value);
+    }
+
+    private float _voteKickPassRatio = 0.51f;
+    public float VoteKickPassRatio
+    {
+        get => _voteKickPassRatio;
+        set => SetProperty(ref _voteKickPassRatio, value);
+    }
+
+    private int _voteKickPollDurationSeconds = 60;
+    public int VoteKickPollDurationSeconds
+    {
+        get => _voteKickPollDurationSeconds;
+        set => SetProperty(ref _voteKickPollDurationSeconds, value);
+    }
+
+    private int _voteKickCooldownSeconds = 30;
+    public int VoteKickCooldownSeconds
+    {
+        get => _voteKickCooldownSeconds;
+        set => SetProperty(ref _voteKickCooldownSeconds, value);
+    }
+
     public IEnumerable<long> GetInstalledWorkshopIds()
     {
         return InstalledWorkshopModUtility.GetInstalledWorkshopIds(InstallDirectory);
