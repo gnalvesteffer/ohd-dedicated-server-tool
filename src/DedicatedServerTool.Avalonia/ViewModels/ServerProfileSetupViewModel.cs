@@ -159,7 +159,8 @@ public class ServerProfileSetupViewModel : ObservableObject
             ServerProfile.QueryPort.HasValue &&
             ServerProfile.RconPort.HasValue &&
             !string.IsNullOrWhiteSpace(ServerProfile.InitialMapName) &&
-            ServerProfile.MaxPlayers.HasValue;
+            ServerProfile.MaxPlayers.HasValue &&
+            (!ServerProfile.IsRconEnabled || !string.IsNullOrWhiteSpace(ServerProfile.RconPassword));
     }
 
     private void SaveServerProfile()

@@ -275,6 +275,20 @@ public class ServerProfile : ObservableObject
         set => SetProperty(ref _voteKickCooldownSeconds, value);
     }
 
+    private bool _isRconEnabled;
+    public bool IsRconEnabled
+    {
+        get => _isRconEnabled;
+        set => SetProperty(ref _isRconEnabled, value);
+    }
+
+    private string? _rconPassword;
+    public string? RconPassword
+    {
+        get => _rconPassword;
+        set => SetProperty(ref _rconPassword, value);
+    }
+
     public ServerProfile()
     {
         ServerName = "My OHD Server";

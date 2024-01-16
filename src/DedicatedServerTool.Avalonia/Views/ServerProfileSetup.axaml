@@ -121,6 +121,18 @@
                             <TextBox Text="{Binding ServerProfile.AdminSteamIdsText}" AcceptsReturn="True" Height="200" />
                         </StackPanel>
                         <StackPanel Classes="form-group" VerticalAlignment="Bottom">
+                            <CheckBox Content="Enable RCON" IsChecked="{Binding ServerProfile.IsRconEnabled}" />
+                            <WrapPanel Orientation="Horizontal" IsVisible="{Binding ServerProfile.IsRconEnabled}">
+                                <StackPanel Classes="form-group" Width="300" Margin="5" VerticalAlignment="Bottom">
+                                    <WrapPanel>
+                                        <TextBlock Text="RCON Password" />
+                                        <TextBlock Classes="attention" Text="*" />
+                                    </WrapPanel>
+                                    <TextBox Text="{Binding ServerProfile.RconPassword}" PasswordChar="*" />
+                                </StackPanel>
+                            </WrapPanel>
+                        </StackPanel>
+                        <StackPanel Classes="form-group" VerticalAlignment="Bottom">
                             <CheckBox Content="Enable Vote-Kicking" ToolTip.Tip="When enabled, players will be able to initiate vote-kicks against other players." IsChecked="{Binding ServerProfile.IsVoteKickingEnabled}" />
                             <WrapPanel Orientation="Horizontal" IsVisible="{Binding ServerProfile.IsVoteKickingEnabled}">
                                 <StackPanel Classes="form-group" Width="175" Margin="5" VerticalAlignment="Bottom">

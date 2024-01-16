@@ -165,6 +165,13 @@ internal static class ServerUtility
     {
         var gameIniContents = new StringBuilder();
 
+        gameIniContents.AppendLine("[/Script/RCON.RCONServerSystem]");
+        gameIniContents.AppendLine($"bEnabled={profile.IsRconEnabled}");
+        gameIniContents.AppendLine($"ListenPort={profile.RconPort}");
+        gameIniContents.AppendLine($"Password={profile.RconPassword}");
+        gameIniContents.AppendLine("MaxActiveConnections=5");
+        gameIniContents.AppendLine("MaxAuthAttempts=3");
+
         gameIniContents.AppendLine("[/Script/DonkehFramework.DFBaseGameMode]");
         gameIniContents.AppendLine($"bAllowVoting={profile.IsVoteKickingEnabled}");
 
