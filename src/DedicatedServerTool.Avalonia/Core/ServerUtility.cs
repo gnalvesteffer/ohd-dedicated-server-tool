@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DedicatedServerTool.Avalonia.Core;
@@ -149,20 +150,15 @@ internal static class ServerUtility
 
     public static async Task<IEnumerable<long>> UpdateServerAndModsAsync(ServerProfile serverProfile)
     {
+        await SteamCmdUtility.DownloadOrUpdateDedicatedServerAsync(serverProfile.InstallDirectory);
         var failedWorkshopIds = new List<long>();
-        var updateServerTask = SteamCmdUtility.DownloadOrUpdateDedicatedServerAsync(serverProfile.InstallDirectory);
-        var updateModsTask = Parallel.ForEachAsync(serverProfile.GetInstalledWorkshopIds(), async (workshopId, cancellationToken) =>
+        foreach (var workshopId in serverProfile.GetInstalledWorkshopIds())
         {
-            if (cancellationToken.IsCancellationRequested)
-            {
-                return;
-            }
             if (!await SteamCmdUtility.DownloadOrUpdateModAsync(serverProfile.InstallDirectory, workshopId))
             {
                 failedWorkshopIds.Add(workshopId);
             }
-        });
-        await Task.WhenAll(updateServerTask, updateModsTask);
+        }
         return failedWorkshopIds;
     }
 
