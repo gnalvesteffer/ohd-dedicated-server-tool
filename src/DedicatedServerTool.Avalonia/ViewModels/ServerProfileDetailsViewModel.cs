@@ -6,6 +6,7 @@ using DedicatedServerTool.Avalonia.Models;
 using DedicatedServerTool.Avalonia.Views;
 using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -50,9 +51,13 @@ public class ServerProfileDetailsViewModel : ObservableObject
         ServerProfile.IsSetUp = false;
     }
 
-    private Task UpdateServerAndModsAsync()
+    private async Task UpdateServerAndModsAsync()
     {
-        return ServerUtility.UpdateServerAndModsAsync(ServerProfile);
+        var failedWorkshopIds = await ServerUtility.UpdateServerAndModsAsync(ServerProfile);
+        if (failedWorkshopIds.Any())
+        {
+            MessageBoxWindow.Show("Error", $"An unexpected issue occurred while updating. Consider retrying, SteamCMD can be unreliable sometimes. Failed Workshop ItemIDs: {string.Join(", ", failedWorkshopIds)}");
+        }
     }
 
     private async Task StartServerAsync()
@@ -63,7 +68,7 @@ public class ServerProfileDetailsViewModel : ObservableObject
         }
         catch (Exception exception)
         {
-            new MessageBoxWindow("Error", exception.Message).Show();
+            MessageBoxWindow.Show("Error", exception.Message);
         }
     }
 

@@ -64,6 +64,12 @@ namespace DedicatedServerTool.Avalonia.Core
                 // Wait for the process to exit
                 process.WaitForExit();
 
+                var exitCode = process.ExitCode;
+                if (exitCode != 0)
+                {
+                    return false;
+                }
+
                 // Check if mod was downloaded
                 var workshopItemDirectory = Path.Combine(installDirectory, @$"steamapps\workshop\content\{GameAppId}\{workshopId}");
                 if (!Directory.Exists(workshopItemDirectory))

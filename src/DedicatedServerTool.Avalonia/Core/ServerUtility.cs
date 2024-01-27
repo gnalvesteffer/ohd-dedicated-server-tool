@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
@@ -95,7 +96,14 @@ internal static class ServerUtility
             {
                 if (profile.ShouldUpdateBeforeStarting)
                 {
-                    await UpdateServerAndModsAsync(profile);
+                    while (true) // retry until this SteamCMD works -- SteamCMD can sometimes be unreliable, so just keep trying...
+                    {
+                        var failedWorkshopIds = await UpdateServerAndModsAsync(profile);
+                        if (!failedWorkshopIds.Any())
+                        {
+                            break;
+                        }
+                    }
                 }
 
                 var isRestarting = false;
@@ -139,8 +147,9 @@ internal static class ServerUtility
         }
     }
 
-    public static Task UpdateServerAndModsAsync(ServerProfile serverProfile)
+    public static async Task<IEnumerable<long>> UpdateServerAndModsAsync(ServerProfile serverProfile)
     {
+        var failedWorkshopIds = new List<long>();
         var updateServerTask = SteamCmdUtility.DownloadOrUpdateDedicatedServerAsync(serverProfile.InstallDirectory);
         var updateModsTask = Parallel.ForEachAsync(serverProfile.GetInstalledWorkshopIds(), async (workshopId, cancellationToken) =>
         {
@@ -148,9 +157,13 @@ internal static class ServerUtility
             {
                 return;
             }
-            await SteamCmdUtility.DownloadOrUpdateModAsync(serverProfile.InstallDirectory, workshopId);
+            if (!await SteamCmdUtility.DownloadOrUpdateModAsync(serverProfile.InstallDirectory, workshopId))
+            {
+                failedWorkshopIds.Add(workshopId);
+            }
         });
-        return Task.WhenAll(updateServerTask, updateModsTask);
+        await Task.WhenAll(updateServerTask, updateModsTask);
+        return failedWorkshopIds;
     }
 
     public static void WriteIniAndConfigFiles(ServerProfile profile)

@@ -227,7 +227,10 @@ public class ServerProfileSetupViewModel : ObservableObject
         var workshopId = EnteredWorkshopId.Value;
         EnteredWorkshopId = null;
 
-        await SteamCmdUtility.DownloadOrUpdateModAsync(ServerProfile.InstallDirectory, workshopId);
+        if (!await SteamCmdUtility.DownloadOrUpdateModAsync(ServerProfile.InstallDirectory, workshopId))
+        {
+            MessageBoxWindow.Show("Error", "An unexpected issue occurred while downloading mod. Consider retrying, SteamCMD can be unreliable sometimes.");
+        }
         RehydrateInstalledWorkshopIds();
     }
 

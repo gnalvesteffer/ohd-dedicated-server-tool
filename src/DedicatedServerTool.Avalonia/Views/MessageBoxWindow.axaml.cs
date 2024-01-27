@@ -10,4 +10,9 @@ public partial class MessageBoxWindow : Window
         InitializeComponent();
         DataContext = new MessageBoxViewModel(title, message, Close);
     }
+
+    public static void Show(string title, string message)
+    {
+        new MessageBoxWindow(title, message).Show();
+    }
 }
