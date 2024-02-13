@@ -155,7 +155,10 @@ internal static class ServerUtility
         var failedWorkshopIds = new List<long>();
         foreach (var workshopId in serverProfile.GetInstalledWorkshopIds())
         {
-            if (!await SteamCmdUtility.DownloadOrUpdateModAsync(serverProfile.InstallDirectory, workshopId))
+            if (
+                InstalledWorkshopModUtility.IsModEnabled(serverProfile.InstallDirectory, workshopId) &&
+                !await SteamCmdUtility.DownloadOrUpdateModAsync(serverProfile.InstallDirectory, workshopId)
+            )
             {
                 failedWorkshopIds.Add(workshopId);
             }
