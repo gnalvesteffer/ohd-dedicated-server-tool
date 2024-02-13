@@ -289,6 +289,13 @@ public class ServerProfile : ObservableObject
         set => SetProperty(ref _rconPassword, value);
     }
 
+    private int? _minPlayersToCaptureOverride;
+    public int? MinPlayersToCaptureOverride
+    {
+        get => _minPlayersToCaptureOverride;
+        set => SetProperty(ref _minPlayersToCaptureOverride, value);
+    }
+
     public ServerProfile()
     {
         ServerName = "My OHD Server";

@@ -205,6 +205,7 @@ internal static class ServerUtility
         engineIniContents.AppendLine($"HD.Game.MinRespawnDelayOverride={profile.RespawnDurationSeconds}");
         engineIniContents.AppendLine($"HD.Game.DisableKitRestrictionsOverride={Convert.ToInt32(profile.ShouldDisableKitRestrictions)}");
         engineIniContents.AppendLine($"Game.AutoBalanceTeamsOverride={Convert.ToInt32(profile.IsAutoBalanceEnabled)}");
+        engineIniContents.AppendLine($"HD.CP.MinPlayersToCaptureOverride={profile.MinPlayersToCaptureOverride}");
 
         var engineIniPath = Path.Combine(profile.InstallDirectory, @"HarshDoorstop\Saved\Config\WindowsServer\Engine.ini");
         Directory.CreateDirectory(Path.GetDirectoryName(engineIniPath)!);
