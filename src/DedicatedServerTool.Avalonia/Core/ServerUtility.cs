@@ -77,7 +77,7 @@ internal static class ServerUtility
 
         WriteIniAndConfigFiles(profile);
 
-        ProcessStartInfo startInfo = new ProcessStartInfo
+        ProcessStartInfo serverProcessStartInfo = new ProcessStartInfo
         {
             WorkingDirectory = profile.InstallDirectory,
             FileName = Path.Combine(profile.InstallDirectory, @"HarshDoorstop\Binaries\Win64\HarshDoorstopServer-Win64-Shipping.exe"),
@@ -108,12 +108,12 @@ internal static class ServerUtility
                 }
 
                 var isRestarting = false;
-                using Process process = new() { StartInfo = startInfo };
-                process.Start();
+                using Process serverProcess = new() { StartInfo = serverProcessStartInfo };
+                serverProcess.Start();
 
                 var tasks = new List<Task>
                 {
-                    process.WaitForExitAsync()
+                    serverProcess.WaitForExitAsync()
                 };
                 if (profile.RestartIntervalHours > 0)
                 {
@@ -121,14 +121,15 @@ internal static class ServerUtility
                 }
                 await Task.WhenAny(tasks); // wait for either the server to crash or to restart
 
-                if (!process.HasExited)
+                if (!serverProcess.HasExited)
                 {
-                    process.CloseMainWindow();
+                    serverProcess.CloseMainWindow();
                 }
 
-                await process.WaitForExitAsync();
+                await serverProcess.WaitForExitAsync();
 
-                if (!isRestarting && CleanExitCodes.Contains(process.ExitCode))
+
+                if (!isRestarting && CleanExitCodes.Contains(serverProcess.ExitCode))
                 {
                     break;
                 }

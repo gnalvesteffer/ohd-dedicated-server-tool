@@ -26,6 +26,7 @@ public class ServerProfileDetailsViewModel : ObservableObject
     public ICommand EditServerProfileCommand { get; }
     public ICommand UpdateServerAndModsCommand { get; }
     public ICommand StartServerCommand { get; }
+    public ICommand StartRconToolCommand { get; }
 
     public ServerProfileDetailsViewModel(ServerProfile profile)
     {
@@ -34,6 +35,7 @@ public class ServerProfileDetailsViewModel : ObservableObject
         EditServerProfileCommand = new RelayCommand(EditServerProfile);
         UpdateServerAndModsCommand = new AsyncRelayCommand(UpdateServerAndModsAsync);
         StartServerCommand = new AsyncRelayCommand(StartServerAsync);
+        StartRconToolCommand = new RelayCommand(StartRconTool);
     }
 
     private void OpenInstallDirectory()
@@ -72,4 +74,12 @@ public class ServerProfileDetailsViewModel : ObservableObject
         }
     }
 
+    private void StartRconTool()
+    {
+        if (!ServerProfile.RconPort.HasValue || ServerProfile.RconPassword == null)
+        {
+            MessageBoxWindow.Show("Error", "Cannot start RCON tool. RCON Port or RCON Password is not configured.");
+        }
+        VehlawRconUtility.Start("127.0.0.1", ServerProfile.RconPort!.Value, ServerProfile.RconPassword!);
+    }
 }
