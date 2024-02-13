@@ -34,6 +34,25 @@ public class WorkshopModViewModel : ObservableObject
         set => SetProperty(ref _modCoverImage, value);
     }
 
+    private bool _isEnabled;
+    public bool IsEnabled
+    {
+        get => _isEnabled;
+        set
+        {
+            var isEnabled = false;
+            if (value)
+            {
+                isEnabled = InstalledWorkshopModUtility.EnableMod(_serverProfile.InstallDirectory, WorkshopId);
+            }
+            else
+            {
+                isEnabled = InstalledWorkshopModUtility.DisableMod(_serverProfile.InstallDirectory, WorkshopId);
+            }
+            SetProperty(ref _isEnabled, isEnabled);
+        }
+    }
+
     public ICommand OpenWorkshopPageCommand { get; }
     public ICommand DeleteModCommand { get; }
     public ICommand LoadWorkshopCoverImageCommand { get; }
@@ -43,6 +62,7 @@ public class WorkshopModViewModel : ObservableObject
         _serverProfile = serverProfile;
         _workshopId = workshopId;
         _modName = InstalledWorkshopModUtility.GetModName(_serverProfile.InstallDirectory, WorkshopId);
+        _isEnabled = InstalledWorkshopModUtility.IsModEnabled(_serverProfile.InstallDirectory, WorkshopId);
         _onDelete = onDelete;
         OpenWorkshopPageCommand = new RelayCommand(OpenWorkshopPage);
         DeleteModCommand = new AsyncRelayCommand(RemoveWorkshopIdAsync);

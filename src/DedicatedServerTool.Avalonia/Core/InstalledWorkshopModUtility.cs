@@ -44,6 +44,50 @@ namespace DedicatedServerTool.Avalonia.Core
             return workshopIds;
         }
 
+        internal static bool IsModEnabled(string serverInstallDirectory, long workshopId)
+        {
+            return Directory.Exists(GetModPaths(serverInstallDirectory, workshopId).ModSymLinkDirectory);
+        }
+
+        internal static bool EnableMod(string serverInstallDirectory, long workshopId)
+        {
+            var modDirectories = GetModPaths(serverInstallDirectory, workshopId);
+            if (modDirectories.ModSymLinkDirectory != null && modDirectories.WorkshopItemModDirectory != null && !Directory.Exists(modDirectories.ModSymLinkDirectory))
+            {
+                Directory.CreateSymbolicLink(modDirectories.ModSymLinkDirectory, modDirectories.WorkshopItemModDirectory);
+            }
+            return IsModEnabled(serverInstallDirectory, workshopId);
+        }
+
+        internal static bool DisableMod(string serverInstallDirectory, long workshopId)
+        {
+            var modDirectories = GetModPaths(serverInstallDirectory, workshopId);
+            if (modDirectories.ModSymLinkDirectory != null)
+            {
+                Directory.Delete(modDirectories.ModSymLinkDirectory, true);
+            }
+            return IsModEnabled(serverInstallDirectory, workshopId);
+        }
+
+        internal static (string? WorkshopItemDirectory, string? WorkshopItemModDirectory, string? ModSymLinkDirectory) GetModPaths(string serverInstallDirectory, long workshopId)
+        {
+            var workshopItemDirectory = Path.Combine(serverInstallDirectory, @$"steamapps\workshop\content\736590\{workshopId}");
+            if (!Directory.Exists(workshopItemDirectory))
+            {
+                return (null, null, null);
+            }
+
+            var workshopNestedModDirectory = Directory.GetDirectories(workshopItemDirectory).FirstOrDefault();
+            if (workshopNestedModDirectory == null)
+            {
+                return (workshopItemDirectory, null, null);
+            }
+
+            var modFolderName = Path.GetFileName(workshopNestedModDirectory)!;
+            var modDirectory = Path.Combine(serverInstallDirectory, @"HarshDoorstop\Mods");
+            return (workshopItemDirectory, workshopNestedModDirectory, Path.Combine(modDirectory, modFolderName));
+        }
+
         internal static void OpenWorkshopPage(long workshopId)
         {
             Process.Start(

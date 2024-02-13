@@ -70,28 +70,18 @@ namespace DedicatedServerTool.Avalonia.Core
                     return false;
                 }
 
-                // Check if mod was downloaded
-                var workshopItemDirectory = Path.Combine(installDirectory, @$"steamapps\workshop\content\{GameAppId}\{workshopId}");
-                if (!Directory.Exists(workshopItemDirectory))
+                // Check if mod was downloaded and make symlink
+                var modPaths = InstalledWorkshopModUtility.GetModPaths(installDirectory, workshopId);
+                if (modPaths.WorkshopItemDirectory != null && modPaths.WorkshopItemModDirectory != null && modPaths.ModSymLinkDirectory != null)
                 {
-                    return false;
+                    if (!Directory.Exists(modPaths.ModSymLinkDirectory))
+                    {
+                        Directory.CreateSymbolicLink(modPaths.ModSymLinkDirectory, modPaths.WorkshopItemModDirectory);
+                    }
+                    return true;
                 }
 
-                // Create a symbolic link to map the SteamCMD download location to the game mod directory
-                var workshopNestedModDirectory = Directory.GetDirectories(workshopItemDirectory).FirstOrDefault();
-                if (workshopNestedModDirectory == null)
-                {
-                    return false;
-                }
-                var modFolderName = Path.GetFileName(workshopNestedModDirectory)!;
-                var gameDesiredModFolderPath = Path.Combine(modDirectory, modFolderName);
-                if (!Directory.Exists(gameDesiredModFolderPath))
-                {
-                    Directory.CreateSymbolicLink(gameDesiredModFolderPath, workshopNestedModDirectory);
-                }
-
-                // Return the result
-                return true;
+                return false;
             });
         }
 

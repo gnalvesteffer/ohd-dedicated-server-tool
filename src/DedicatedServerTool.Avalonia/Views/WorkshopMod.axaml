@@ -4,21 +4,24 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:DedicatedServerTool.Avalonia.ViewModels"
              x:DataType="vm:WorkshopModViewModel"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             mc:Ignorable="d" d:DesignWidth="800"
              x:Class="DedicatedServerTool.Avalonia.Views.WorkshopMod">
-    <StackPanel>
-        <TextBlock Classes="info" Text="{Binding WorkshopId}" />
-        <Panel>
-            <WrapPanel>
+    <Grid>
+        <WrapPanel VerticalAlignment="Center" >
+            <StackPanel VerticalAlignment="Center" >
                 <Grid Background="Black" Width="64" Height="64" Margin="0,0,10,0">
                     <Image Source="{Binding ModCoverImage}" />
                 </Grid>
+            </StackPanel>
+            <StackPanel>
+                <SelectableTextBlock Classes="info" Text="{Binding WorkshopId}" />
                 <TextBlock Text="{Binding ModName}" HorizontalAlignment="Left" VerticalAlignment="Center" />
-            </WrapPanel>
-            <WrapPanel HorizontalAlignment="Right" VerticalAlignment="Center">
-                <Button Content="Workshop" Command="{Binding OpenWorkshopPageCommand}" ToolTip.Tip="Opens the mod's workshop page in your web browser." Margin="0,0,5,0" />
-                <Button Content="Delete" Command="{Binding DeleteModCommand}" />
-            </WrapPanel>
-        </Panel>
-    </StackPanel>
+                <CheckBox IsChecked="{Binding IsEnabled}" Content="Enable" VerticalAlignment="Center" />
+            </StackPanel>
+        </WrapPanel>
+        <WrapPanel HorizontalAlignment="Right" VerticalAlignment="Center">
+            <Button Content="Workshop" Command="{Binding OpenWorkshopPageCommand}" ToolTip.Tip="Opens the mod's workshop page in your web browser." Margin="0,0,5,0" />
+            <Button Content="Delete" Command="{Binding DeleteModCommand}" />
+        </WrapPanel>
+    </Grid>
 </UserControl>
